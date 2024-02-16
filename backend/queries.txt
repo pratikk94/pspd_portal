@@ -1,0 +1,24 @@
+CREATE DATABASE website;
+
+USE website;
+
+CREATE TABLE applications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    image BLOB,
+    link VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE type (
+    type_id INT AUTO_INCREMENT PRIMARY KEY,
+    type_name VARCHAR(255) NOT NULL
+);
+
+ALTER TABLE applications
+ADD COLUMN type_id INT,
+ADD FOREIGN KEY (type_id) REFERENCES type(type_id);
+
+USE website;
+SELECT plugin FROM mysql.user WHERE User='root';
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Sayali20311!';
