@@ -3,6 +3,8 @@ import CircleAroundImage from "../components/CircleAroundImage";
 import "../pages/LandingPage.css";
 import { fields } from "../constants/constants";
 import Card from "../components/Card";
+import ExpandableList from "../components/ExpandableList";
+
 export default function LandingPage() {
   const [count, setCount] = useState(0);
   const [dimensions, setDimensions] = useState({
@@ -16,8 +18,8 @@ export default function LandingPage() {
         <div
           style={{
             position: "absolute",
-            marginTop: dimensions.height * 0.25,
-            height: dimensions.height * 0.5,
+            marginTop: dimensions.height * 0.05,
+            height: dimensions.height * 0.8,
             width: dimensions.width * 0.15,
             top: 0,
             left: 0,
@@ -40,8 +42,8 @@ export default function LandingPage() {
             top: 0,
             right: 0,
             zIndex: 10,
-            marginTop: dimensions.height * 0.25,
-            height: dimensions.height * 0.5,
+            marginTop: dimensions.height * 0.05,
+            height: dimensions.height * 0.8,
             width: dimensions.width * 0.15,
             backgroundColor: "white",
             padding: "20px",
@@ -102,12 +104,7 @@ export default function LandingPage() {
       />
       {isModalVisible && (
         <Modal position={modalPosition}>
-          {[...Array(5).keys()].map((index2) => (
-            <Card
-              title={modalContent}
-              // onClick={() => handleCardClick(`Card ${index + 1}`)}
-            />
-          ))}
+          <ExpandableList />
         </Modal>
       )}
     </div>

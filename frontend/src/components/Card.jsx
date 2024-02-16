@@ -28,7 +28,7 @@ export default function MultiActionAreaCard(props) {
       </CardActionArea>
       <CardActions>
         <Button size="small" color="primary">
-          Share
+          Open
         </Button>
       </CardActions>
     </Card>
