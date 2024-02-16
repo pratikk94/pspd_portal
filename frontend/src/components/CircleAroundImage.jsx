@@ -106,7 +106,7 @@ const CircleAroundImage = ({ n, width, height, onCircleHover }) => {
                 // marginTop: height * 0.06,
 
                 width: width * 0.065,
-                textSize: 10,
+                fontSize: height * 0.015,
                 fontWeight: 600,
                 wordWrap: "anywhere",
                 textAlign: "center",

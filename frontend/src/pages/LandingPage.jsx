@@ -104,7 +104,7 @@ export default function LandingPage() {
       />
       {isModalVisible && (
         <Modal position={modalPosition}>
-          <ExpandableList />
+          <ExpandableList content={modalContent} />
         </Modal>
       )}
     </div>

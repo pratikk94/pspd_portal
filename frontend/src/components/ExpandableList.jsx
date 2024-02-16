@@ -15,21 +15,26 @@ const ExpandableList = ({ items }) => {
   };
 
   return (
-    <ul>
-      {[...Array(5).keys()].map((index) => (
-        <li key={index} style={{ listStyleType: "none" }}>
-          <div onMouseEnter={() => handleItemClick(index)}>
-            <p style={{ textAlign: "left" }}>{"Application " + (index + 1)}</p>
-            {expandedItemIndex === index && (
-              <Card
-                title={"Application " + (index + 1)}
-                // onClick={() => handleCardClick(`Card ${index + 1}`)}
-              />
-            )}
-          </div>
-        </li>
-      ))}
-    </ul>
+    <div>
+      {/*   <p>{items.content}</p> */}
+      <ul>
+        {[...Array(5).keys()].map((index) => (
+          <li key={index} style={{ listStyleType: "none" }}>
+            <div onMouseEnter={() => handleItemClick(index)}>
+              <p style={{ textAlign: "left" }}>
+                {"Application " + (index + 1)}
+              </p>
+              {expandedItemIndex === index && (
+                <Card
+                  title={"Application " + (index + 1)}
+                  // onClick={() => handleCardClick(`Card ${index + 1}`)}
+                />
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
