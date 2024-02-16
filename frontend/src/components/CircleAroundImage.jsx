@@ -96,26 +96,27 @@ const CircleAroundImage = ({ n, width, height, onCircleHover }) => {
             style={{
               left,
               top,
-              width: height / 8,
-              height: height / 8,
+              width: height / 7,
+              height: height / 7,
             }}
           >
             <p
               style={{
-                marginLeft: width * 0.007,
-                marginTop: height * 0.05,
-                width: width * 0.05,
+                marginLeft: width * 0.005,
+                marginTop: height * 0.06,
+                width: width * 0.065,
                 textSize: 10,
                 fontWeight: 600,
                 wordWrap: "anywhere",
                 textAlign: "center",
+                color: hoveredElementIndex != index ? "white" : "#1672e3",
               }}
             >
               {fields[index]}
             </p>
-            {hoveredElementIndex === index && (
+            {/* {hoveredElementIndex === index && (
               <Modal position={modalPosition} index={index}></Modal>
-            )}
+            )} */}
           </div>
         );
       })}

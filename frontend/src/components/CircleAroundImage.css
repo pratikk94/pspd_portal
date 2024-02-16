@@ -18,7 +18,7 @@
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background-color: #1672e3;
+  background-color: #062f62;
   transition: transform 0.5s ease;
   transform: scale(0); /* Initially collapsed */
 }

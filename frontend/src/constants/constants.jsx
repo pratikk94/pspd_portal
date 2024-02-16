@@ -1,5 +1,5 @@
 export const fields = [
-  "Compliance/Quality",
+  "Compliance/\nQuality",
   "Corporate",
   "EHS",
   "Finance",
