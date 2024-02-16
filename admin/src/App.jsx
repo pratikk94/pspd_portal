@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Container, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, TextField, Button, Grid, Select, MenuItem, FormControl, InputLabel, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 function App() {
   const [applications, setApplications] = useState([]);
   const [types, setTypes] = useState([]);
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
+    name: '',
+    description: '',
     image: null,
-    link: "",
-    type_id: "",
+    link: '',
+    type_id: ''
   });
+  const [selectedApplication, setSelectedApplication] = useState(null);
 
   useEffect(() => {
     fetchApplications();
@@ -19,33 +21,33 @@ function App() {
 
   const fetchApplications = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/applications");
+      const response = await axios.get('http://localhost:3000/applications');
       setApplications(response.data);
     } catch (error) {
-      console.error("Error fetching applications: ", error);
+      console.error('Error fetching applications: ', error);
     }
   };
 
   const fetchTypes = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/types");
+      const response = await axios.get('http://localhost:3000/types');
       setTypes(response.data);
     } catch (error) {
-      console.error("Error fetching types: ", error);
+      console.error('Error fetching types: ', error);
     }
   };
 
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
   const handleFileChange = (e) => {
     setFormData({
       ...formData,
-      image: e.target.files[0],
+      image: e.target.files[0]
     });
   };
 
@@ -53,94 +55,86 @@ function App() {
     e.preventDefault();
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append("name", formData.name);
-      formDataToSend.append("description", formData.description);
-      formDataToSend.append("image", formData.image);
-      formDataToSend.append("link", formData.link);
-      formDataToSend.append("type_id", formData.type_id);
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('image', formData.image);
+      formDataToSend.append('link', formData.link);
+      formDataToSend.append('type_id', formData.type_id);
 
-      await axios.post("http://localhost:3000/applications", formDataToSend);
+      await axios.post('http://localhost:3000/applications', formDataToSend);
 
       // Clear form fields after submission
       setFormData({
-        name: "",
-        description: "",
+        name: '',
+        description: '',
         image: null,
-        link: "",
-        type_id: "",
+        link: '',
+        type_id: ''
       });
 
       // Refresh applications list
       fetchApplications();
     } catch (error) {
-      console.error("Error submitting application: ", error);
+      console.error('Error submitting application: ', error);
     }
   };
 
+  const handleListItemClick = (application) => {
+    setSelectedApplication(application);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedApplication(null);
+  };
+
   return (
-    <div style={{ marginLeft: "40%" }}>
-      <h1>Applications</h1>
-      <ul>
-        {applications.map((application) => (
-          <li key={application.id}>
-            <p>Name: {application.name}</p>
-            <p>Description: {application.description}</p>
-            <img
-              src={`data:image/png;base64,${application.image}`}
-              alt="Application"
-            />
-            <p>Link: {application.link}</p>
-            <p>Type: {application.type_name}</p>
-          </li>
-        ))}
-      </ul>
-      <h2>Add New Application</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleInputChange}
-          placeholder="Name"
-          required
-        />
-        <br />
-        <input
-          type="text"
-          name="description"
-          value={formData.description}
-          onChange={handleInputChange}
-          placeholder="Description"
-          required
-        />
-        <br />
-        <input type="file" name="image" onChange={handleFileChange} required />
-        <br />
-        <input
-          type="text"
-          name="link"
-          value={formData.link}
-          onChange={handleInputChange}
-          placeholder="Link"
-          required
-        />
-        <br />
-        <select
-          name="type_id"
-          value={formData.type_id}
-          onChange={handleInputChange}
-          required
-        >
-          <option value="">Select Type</option>
-          {types.map((type) => (
-            <option key={type.type_id} value={type.type_id}>
-              {type.type_name}
-            </option>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      <Container maxWidth="md">
+        <Typography variant="h3" align="center" gutterBottom>Applications</Typography>
+        <List>
+          {applications.map(application => (
+            <ListItem key={application.id} button onClick={() => handleListItemClick(application)}>
+              <ListItemAvatar>
+                <Avatar alt={application.name} src={`data:image/png;base64,${application.image}`} />
+              </ListItemAvatar>
+              <ListItemText
+                primary={application.name}
+                secondary={application.description}
+              />
+            </ListItem>
           ))}
-        </select>
-        <br />
-        <button type="submit">Submit</button>
-      </form>
+        </List>
+
+        <Dialog open={Boolean(selectedApplication)} onClose={handleCloseModal}>
+          <DialogTitle>{selectedApplication && selectedApplication.name}</DialogTitle>
+          <DialogContent>
+            <Typography variant="body1" gutterBottom>Description: {selectedApplication && selectedApplication.description}</Typography>
+            <Typography variant="body1" gutterBottom>Image: <img src={`data:image/png;base64,${selectedApplication && selectedApplication.image}`} alt="Application" /></Typography>
+            <Typography variant="body1" gutterBottom>Type: {selectedApplication && selectedApplication.type_name}</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal} color="primary">Close</Button>
+          </DialogActions>
+        </Dialog>
+
+        <Typography variant="h5" align="center" gutterBottom>Add New Application</Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField fullWidth label="Name" name="name" value={formData.name} onChange={handleInputChange} required /><br /><br />
+          <TextField fullWidth label="Description" name="description" value={formData.description} onChange={handleInputChange} required /><br /><br />
+          <TextField fullWidth type="file"  name="image" onChange={handleFileChange} required /><br /><br />
+          <TextField fullWidth label="Link" name="link" value={formData.link} onChange={handleInputChange} required /><br /><br />
+          <FormControl fullWidth>
+            <InputLabel>Type</InputLabel>
+            <Select name="type_id" value={formData.type_id} onChange={handleInputChange} required>
+              <MenuItem value="">Select Type</MenuItem>
+              {types.map(type => (
+                <MenuItem key={type.type_id} value={type.type_id}>{type.type_name}</MenuItem>
+              ))}
+            </Select>
+          </FormControl><br /><br />
+          <Button type="submit" variant="contained" color="primary">Submit</Button>
+        </form>
+      </Container>
     </div>
   );
 }
