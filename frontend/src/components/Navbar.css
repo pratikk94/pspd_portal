@@ -1,0 +1,43 @@
+/* Navbar.css */
+.navbar {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 10px;
+  background-color: #333;
+  width: 100vw;
+}
+
+.nav-item {
+  color: #999;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.nav-item:hover {
+  color: black;
+}
+
+.search-bar {
+  display: flex;
+}
+
+.search-bar input[type="text"] {
+  padding: 5px;
+  margin-right: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.search-bar button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #555;
+  color: white;
+}
+
+.search-bar button:hover {
+  background-color: #666;
+}
