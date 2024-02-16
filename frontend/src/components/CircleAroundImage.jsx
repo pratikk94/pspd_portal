@@ -102,8 +102,9 @@ const CircleAroundImage = ({ n, width, height, onCircleHover }) => {
           >
             <p
               style={{
-                marginLeft: width * 0.005,
-                marginTop: height * 0.06,
+                // marginLeft: width * 0.005,
+                // marginTop: height * 0.06,
+
                 width: width * 0.065,
                 textSize: 10,
                 fontWeight: 600,

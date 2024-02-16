@@ -15,15 +15,20 @@
 
 .circle {
   position: absolute;
-  width: 150px;
-  height: 150px;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
   background-color: #062f62;
   transition: transform 0.5s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transform: scale(0); /* Initially collapsed */
 }
 
 .circle.expanded {
+  align-items: center;
+  justify-content: center;
   transform: scale(1); /* Expanded when image is hovered */
 }
 
