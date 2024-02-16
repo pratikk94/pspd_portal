@@ -1,0 +1,35 @@
+.container {
+  position: relative;
+  margin: auto;
+  display: flex;
+  height: 300px;
+  width: 300px;
+  justify-content: center;
+  align-items: center;
+}
+
+.center-image {
+  position: absolute;
+  z-index: 1;
+}
+
+.circle {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: skyblue;
+  transition: transform 0.5s ease;
+  transform: scale(0); /* Initially collapsed */
+}
+
+.circle.expanded {
+  transform: scale(1); /* Expanded when image is hovered */
+}
+
+.circle.expanded.highlighted {
+  background-color: #062f62; /* Highlight color */
+  transform: scale(1.4); /* Slightly enlarge */
+  z-index: 2; /* Ensure it's above other circles */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Optional: add shadow for emphasis */
+}
