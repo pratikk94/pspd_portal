@@ -7,7 +7,7 @@ import { Button, CardActionArea, CardActions } from "@mui/material";
 
 export default function MultiActionAreaCard(props) {
   return (
-    <Card sx={{ maxWidth: 345, maxHeight: 400 }} style={{ margin: 20 }}>
+    <Card sx={{ maxWidth: "100%", maxHeight: 400 }} style={{ margin: 20 }}>
       <CardActionArea>
         <CardMedia
           component="img"

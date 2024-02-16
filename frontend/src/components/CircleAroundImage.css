@@ -18,7 +18,7 @@
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background-color: skyblue;
+  background-color: #1672e3;
   transition: transform 0.5s ease;
   transform: scale(0); /* Initially collapsed */
 }
@@ -28,7 +28,7 @@
 }
 
 .circle.expanded.highlighted {
-  background-color: #062f62; /* Highlight color */
+  background-color: skyblue; /* Highlight color */
   transform: scale(1.4); /* Slightly enlarge */
   z-index: 2; /* Ensure it's above other circles */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Optional: add shadow for emphasis */

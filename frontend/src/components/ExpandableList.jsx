@@ -19,10 +19,10 @@ const ExpandableList = ({ items }) => {
       {[...Array(5).keys()].map((index) => (
         <li key={index} style={{ listStyleType: "none" }}>
           <div onMouseEnter={() => handleItemClick(index)}>
-            <p style={{ textAlign: "left" }}>{fields[index]}</p>
+            <p style={{ textAlign: "left" }}>{"Application " + (index + 1)}</p>
             {expandedItemIndex === index && (
               <Card
-                title={fields[index]}
+                title={"Application " + (index + 1)}
                 // onClick={() => handleCardClick(`Card ${index + 1}`)}
               />
             )}

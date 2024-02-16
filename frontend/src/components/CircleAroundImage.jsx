@@ -92,7 +92,7 @@ const CircleAroundImage = ({ n, width, height, onCircleHover }) => {
               setHoveredElementIndex(index);
               onCircleHover(index, e.target.getBoundingClientRect());
             }}
-            onMouseLeave={() => setHoveredElementIndex(-1)}
+            // onMouseLeave={() => setHoveredElementIndex(-1)}
             style={{
               left,
               top,
@@ -100,6 +100,19 @@ const CircleAroundImage = ({ n, width, height, onCircleHover }) => {
               height: height / 8,
             }}
           >
+            <p
+              style={{
+                marginLeft: width * 0.007,
+                marginTop: height * 0.05,
+                width: width * 0.05,
+                textSize: 10,
+                fontWeight: 600,
+                wordWrap: "anywhere",
+                textAlign: "center",
+              }}
+            >
+              {fields[index]}
+            </p>
             {hoveredElementIndex === index && (
               <Modal position={modalPosition} index={index}></Modal>
             )}
