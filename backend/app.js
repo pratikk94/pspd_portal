@@ -1,169 +1,121 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const multer = require("multer");
-const mysql = require("mysql");
-
+const express = require('express');
+const multer = require('multer');
+const mysql = require('mysql');
+const path = require('path');
 const app = express();
 const port = 3000;
 
-// MySQL Connection
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "pratik",
-  database: "website",
-});
-
-connection.connect((err) => {
-  if (err) {
-    console.error("Error connecting to MySQL: ", err);
-    return;
-  }
-  console.log("Connected to MySQL database");
-});
-
-// Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"); // Allow these HTTP methods
   res.setHeader("Access-Control-Allow-Headers", "Content-Type"); // Allow these headers
   next();
 });
-
-// Multer configuration for handling file uploads
-const upload = multer();
-
-// Routes
-app.get("/applications", (req, res) => {
-  connection.query("SELECT * FROM applications", (err, results) => {
-    if (err) {
-      console.error("Error fetching applications: ", err);
-      res.status(500).send("Internal Server Error");
-      return;
-    }
-    res.json(results);
-  });
+const pool = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: 'pratik',
+  database: 'website'
 });
 
-app.get("/applications/:id", (req, res) => {
-  const id = req.params.id;
-
-  connection.query(
-    "SELECT * FROM applications WHERE id = ?",
-    id,
-    (err, results) => {
-      if (err) {
-        console.error("Error fetching application: ", err);
-        res.status(500).send("Internal Server Error");
-        return;
-      }
-      if (results.length === 0) {
-        res.status(404).send("Application not found");
-        return;
-      }
-      res.json(results[0]);
-    }
-  );
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
 });
 
-app.delete("/applications/:id", (req, res) => {
-  const id = req.params.id;
+const upload = multer({ storage: storage });
 
-  connection.query(
-    "DELETE FROM applications WHERE id = ?",
-    id,
-    (err, result) => {
-      if (err) {
-        console.error("Error deleting application: ", err);
-        res.status(500).send("Internal Server Error");
-        return;
-      }
-      res.json({ message: "Application deleted successfully" });
-    }
-  );
-});
-
-// Update the application schema in the Node.js backend to include type_id
-// Modify the POST and PUT routes to accept type_id as well
-
-app.post("/applications", upload.single("image"), (req, res) => {
-  const { name, description, image, link, type_id } = req.body;
-
-  const sql =
-    "INSERT INTO applications (name, description, image, link, type_id) VALUES (?, ?, ?, ?, ?)";
-  const values = [name, description, image, link, type_id];
-
-  connection.query(sql, values, (err, result) => {
-    if (err) {
-      console.error("Error inserting application: ", err);
-      res.status(500).send("Internal Server Error");
-      return;
-    }
-    res.json({
-      message: "Application added successfully",
-      id: result.insertId,
+// Create a new application
+app.post('/applications', upload.single('image'), (req, res) => {
+  const { name, description, link, type_id } = req.body;
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+  const imageUrl = req.file.path;
+  insertApplicationIntoDatabase(name, description, imageUrl, link, type_id)
+    .then(() => {
+      res.status(201).send('Application created successfully');
+    })
+    .catch((error) => {
+      console.error('Error creating application:', error);
+      res.status(500).send('Internal Server Error');
     });
-  });
 });
 
-app.put("/applications/:id", upload.single("image"), (req, res) => {
+// Retrieve all applications
+app.get('/applications', (req, res) => {
+  getAllApplicationsFromDatabase()
+    .then((applications) => {
+      res.status(200).json(applications);
+    })
+    .catch((error) => {
+      console.error('Error retrieving applications:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+// Retrieve a single application by ID
+app.get('/applications/:id', (req, res) => {
   const id = req.params.id;
-  const { name, description, image, link, type_id } = req.body;
-
-  const sql =
-    "UPDATE applications SET name=?, description=?, image=?, link=?, type_id=? WHERE id=?";
-  const values = [name, description, image, link, type_id, id];
-
-  connection.query(sql, values, (err, result) => {
-    if (err) {
-      console.error("Error updating application: ", err);
-      res.status(500).send("Internal Server Error");
-      return;
-    }
-    res.json({ message: "Application updated successfully" });
-  });
-});
-
-// Modify the GET routes to join the applications table with the type table to get type_name
-app.get("/applications", (req, res) => {
-  connection.query(
-    "SELECT applications.*, type.type_name FROM applications LEFT JOIN type ON applications.type_id = type.type_id",
-    (err, results) => {
-      if (err) {
-        console.error("Error fetching applications: ", err);
-        res.status(500).send("Internal Server Error");
-        return;
+  getApplicationByIdFromDatabase(id)
+    .then((application) => {
+      if (!application) {
+        res.status(404).send('Application not found');
+      } else {
+        res.status(200).json(application);
       }
-      res.json(results);
-    }
-  );
+    })
+    .catch((error) => {
+      console.error('Error retrieving application:', error);
+      res.status(500).send('Internal Server Error');
+    });
 });
 
-app.get("/applications/:id", (req, res) => {
+// Update an existing application
+app.put('/applications/:id', upload.single('image'), (req, res) => {
   const id = req.params.id;
-
-  connection.query(
-    "SELECT applications.*, type.type_name FROM applications LEFT JOIN type ON applications.type_id = type.type_id WHERE applications.id = ?",
-    id,
-    (err, results) => {
-      if (err) {
-        console.error("Error fetching application: ", err);
-        res.status(500).send("Internal Server Error");
-        return;
-      }
-      if (results.length === 0) {
-        res.status(404).send("Application not found");
-        return;
-      }
-      res.json(results[0]);
-    }
-  );
+  const { name, description, link, type_id } = req.body;
+  const imageUrl = req.file.path;
+  updateApplicationInDatabase(id, name, description, imageUrl, link, type_id)
+    .then(() => {
+      res.status(200).send('Application updated successfully');
+    })
+    .catch((error) => {
+      console.error('Error updating application:', error);
+      res.status(500).send('Internal Server Error');
+    });
 });
+
+// Delete an application by ID
+app.delete('/applications/:id', (req, res) => {
+  const id = req.params.id;
+  deleteApplicationFromDatabase(id)
+    .then(() => {
+      res.status(200).send('Application deleted successfully');
+    })
+    .catch((error) => {
+      console.error('Error deleting application:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
+
+
 
 app.get("/types", (req, res) => {
+  const connection = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "pratik",
+    database: "website",
+  });
+
   connection.query("SELECT * FROM type", (err, results) => {
     if (err) {
       console.error("Error fetching types: ", err);
@@ -174,7 +126,79 @@ app.get("/types", (req, res) => {
   });
 });
 
-// Start the server
+// Function to insert application data into the database
+function insertApplicationIntoDatabase(name, description, imageUrl, link, type_id) {
+  return new Promise((resolve, reject) => {
+    const query = 'INSERT INTO applications (name, description, image_url, link, type_id) VALUES (?, ?, ?, ?, ?)';
+    pool.query(query, [name, description, imageUrl, link, type_id], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+// Function to retrieve all applications from the database
+function getAllApplicationsFromDatabase() {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM applications';
+    pool.query(query, (error, results) => {
+      console.log(results);
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+// Function to retrieve a single application by ID from the database
+function getApplicationByIdFromDatabase(id) {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT * FROM applications WHERE id = ?';
+    pool.query(query, [id], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results[0]);
+      }
+    });
+  });
+}
+
+// Function to update an existing application in the database
+function updateApplicationInDatabase(id, name, description, imageUrl, link, type_id) {
+  return new Promise((resolve, reject) => {
+    const query = 'UPDATE applications SET name = ?, description = ?, image_url = ?, link = ?, type_id = ? WHERE id = ?';
+    pool.query(query, [name, description, imageUrl, link, type_id, id], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+// Function to delete an application by ID from the database
+function deleteApplicationFromDatabase(id) {
+  return new Promise((resolve, reject) => {
+    const query = 'DELETE FROM applications WHERE id = ?';
+    pool.query(query, [id], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
+
+  
+}
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

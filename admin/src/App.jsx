@@ -13,6 +13,7 @@ function App() {
     type_id: ''
   });
   const [selectedApplication, setSelectedApplication] = useState(null);
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     fetchApplications();
@@ -36,6 +37,8 @@ function App() {
       console.error('Error fetching types: ', error);
     }
   };
+
+  
 
   const handleInputChange = (e) => {
     setFormData({
@@ -62,7 +65,7 @@ function App() {
       formDataToSend.append('type_id', formData.type_id);
 
       await axios.post('http://localhost:3000/applications', formDataToSend);
-
+      fetchApplications();
       // Clear form fields after submission
       setFormData({
         name: '',
@@ -71,9 +74,6 @@ function App() {
         link: '',
         type_id: ''
       });
-
-      // Refresh applications list
-      fetchApplications();
     } catch (error) {
       console.error('Error submitting application: ', error);
     }
@@ -81,21 +81,58 @@ function App() {
 
   const handleListItemClick = (application) => {
     setSelectedApplication(application);
+    setEditMode(false); // Disable edit mode initially
+  };
+
+  const handleEditClick = () => {
+    setEditMode(true); // Enable edit mode
+    // Pre-fill form data with selected application's values
+    setFormData({
+      name: selectedApplication.name,
+      description: selectedApplication.description,
+      image: selectedApplication.image,
+      link: selectedApplication.link,
+      type_id: selectedApplication.type_id
+    });
   };
 
   const handleCloseModal = () => {
     setSelectedApplication(null);
+    setEditMode(false); // Disable edit mode when closing the modal
   };
 
+  const handleUpdateApplication = async () => {
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('image', formData.image);
+      formDataToSend.append('link', formData.link);
+      formDataToSend.append('type_id', formData.type_id);
+
+      await axios.put(`http://localhost:3000/applications/${selectedApplication.id}`, formDataToSend);
+
+      // Refresh applications list
+      fetchApplications();
+
+      // Close modal after update
+      handleCloseModal();
+    } catch (error) {
+      console.error('Error updating application: ', error);
+    }
+  };
+  
   return (
+    
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <Container maxWidth="md">
         <Typography variant="h3" align="center" gutterBottom>Applications</Typography>
         <List>
           {applications.map(application => (
+            
             <ListItem key={application.id} button onClick={() => handleListItemClick(application)}>
               <ListItemAvatar>
-                <Avatar alt={application.name} src={`data:image/png;base64,${application.image}`} />
+                <Avatar alt={application.name} src={`localhostt:3000/${application.image}`.replace(/\\/g, '/')} />
               </ListItemAvatar>
               <ListItemText
                 primary={application.name}
@@ -106,23 +143,50 @@ function App() {
         </List>
 
         <Dialog open={Boolean(selectedApplication)} onClose={handleCloseModal}>
-          <DialogTitle>{selectedApplication && selectedApplication.name}</DialogTitle>
+          <DialogTitle>{editMode ? 'Edit Application' : 'Application Details'}</DialogTitle>
           <DialogContent>
-            <Typography variant="body1" gutterBottom>Description: {selectedApplication && selectedApplication.description}</Typography>
-            <Typography variant="body1" gutterBottom>Image: <img src={`data:image/png;base64,${selectedApplication && selectedApplication.image}`} alt="Application" /></Typography>
-            <Typography variant="body1" gutterBottom>Type: {selectedApplication && selectedApplication.type_name}</Typography>
+            {selectedApplication && !editMode && (
+              
+              <>
+                <p>{`localhost:3000/${selectedApplication.image.replace(/\\/g, '/') }`}</p>
+                <Typography variant="body1" gutterBottom>Description: {selectedApplication.description}</Typography>
+                <Typography variant="body1" gutterBottom>Image: <img style={{width:200,height:200}} src={'http://localhost:3000/'+selectedApplication.image.replace(/\\/g, '/') } alt="Application" /></Typography>  
+                <Typography variant="body1" gutterBottom>Type: {selectedApplication.type_name}</Typography>
+              </>
+            )}
+            {selectedApplication && editMode && (
+              <form onSubmit={handleUpdateApplication}>
+                <TextField fullWidth label="Name" name="name" value={formData.name} onChange={handleInputChange} required /><br />
+                <TextField fullWidth label="Description" name="description" value={formData.description} onChange={handleInputChange} required /><br />
+                <TextField fullWidth type="file" label="Image" name="image" onChange={handleFileChange} required /><br />
+                <TextField fullWidth label="Link" name="link" value={formData.link} onChange={handleInputChange} required /><br />
+                <FormControl fullWidth>
+                  <InputLabel>Type</InputLabel>
+                  <Select name="type_id" value={formData.type_id} onChange={handleInputChange} required>
+                    <MenuItem value="">Select Type</MenuItem>
+                    {types.map(type => (
+                      <MenuItem key={type.type_id} value={type.type_id}>{type.type_name}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl><br />
+                <Button type="submit" variant="contained" color="primary">Update</Button>
+              </form>
+            )}
           </DialogContent>
           <DialogActions>
+            {!editMode && (
+              <Button onClick={handleEditClick} color="primary">Edit</Button>
+            )}
             <Button onClick={handleCloseModal} color="primary">Close</Button>
           </DialogActions>
         </Dialog>
 
         <Typography variant="h5" align="center" gutterBottom>Add New Application</Typography>
         <form onSubmit={handleSubmit}>
-          <TextField fullWidth label="Name" name="name" value={formData.name} onChange={handleInputChange} required /><br /><br />
-          <TextField fullWidth label="Description" name="description" value={formData.description} onChange={handleInputChange} required /><br /><br />
-          <TextField fullWidth type="file"  name="image" onChange={handleFileChange} required /><br /><br />
-          <TextField fullWidth label="Link" name="link" value={formData.link} onChange={handleInputChange} required /><br /><br />
+          <TextField fullWidth label="Name" name="name" value={formData.name} onChange={handleInputChange} required /><br />
+          <TextField fullWidth label="Description" name="description" value={formData.description} onChange={handleInputChange} required /><br />
+          <TextField fullWidth type="file" label="Image" name="image" onChange={handleFileChange} required /><br />
+          <TextField fullWidth label="Link" name="link" value={formData.link} onChange={handleInputChange} required /><br />
           <FormControl fullWidth>
             <InputLabel>Type</InputLabel>
             <Select name="type_id" value={formData.type_id} onChange={handleInputChange} required>
@@ -131,7 +195,7 @@ function App() {
                 <MenuItem key={type.type_id} value={type.type_id}>{type.type_name}</MenuItem>
               ))}
             </Select>
-          </FormControl><br /><br />
+          </FormControl><br />
           <Button type="submit" variant="contained" color="primary">Submit</Button>
         </form>
       </Container>
