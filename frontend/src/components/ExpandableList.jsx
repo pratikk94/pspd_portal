@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Card from "./Card";
 import { fields } from "../constants/constants";
-const ExpandableList = ({ items }) => {
+const ExpandableList = ({ items, data }) => {
   const [expandedItemIndex, setExpandedItemIndex] = useState(null);
 
   const handleItemClick = (index) => {
@@ -14,19 +14,25 @@ const ExpandableList = ({ items }) => {
     }
   };
 
+  //console.log(data);
+
   return (
     <div>
       {/*   <p>{items.content}</p> */}
       <ul>
-        {[...Array(5).keys()].map((index) => (
+        {[...Array(data.length).keys()].map((index) => (
           <li key={index} style={{ listStyleType: "none" }}>
             <div onMouseEnter={() => handleItemClick(index)}>
-              <p style={{ textAlign: "left" }}>
-                {"Application " + (index + 1)}
+              <p style={{ textAlign: "left", color: "black" }}>
+                {data[index]["name"]}
               </p>
               {expandedItemIndex === index && (
                 <Card
-                  title={"Application " + (index + 1)}
+                  title={data[index]["name"]}
+                  content={data[index]["description"]}
+                  image={data[index]["image"]}
+                  applicationId={data[index]["id"]}
+                  userId={1}
                   // onClick={() => handleCardClick(`Card ${index + 1}`)}
                 />
               )}

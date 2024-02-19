@@ -21,7 +21,7 @@ const Modal = ({ position, children, index }) => (
   </div>
 );
 
-const CircleAroundImage = ({ n, width, height, onCircleHover }) => {
+const CircleAroundImage = ({ n, width, height, onCircleHover, data }) => {
   const [isImageHovered, setImageHovered] = useState(false);
   const [hoveredElementIndex, setHoveredElementIndex] = useState(-1);
 
@@ -60,7 +60,7 @@ const CircleAroundImage = ({ n, width, height, onCircleHover }) => {
       className="container"
       style={{ width: size, height: size }}
       onMouseLeave={() => {
-        console.log("left");
+        //console.log("left");
       }}
     >
       <img
@@ -113,7 +113,7 @@ const CircleAroundImage = ({ n, width, height, onCircleHover }) => {
                 color: hoveredElementIndex != index ? "white" : "#1672e3",
               }}
             >
-              {fields[index]}
+              {data[index]["type_name"]}
             </p>
             {/* {hoveredElementIndex === index && (
               <Modal position={modalPosition} index={index}></Modal>

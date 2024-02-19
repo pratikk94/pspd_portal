@@ -6,6 +6,7 @@ const app = express();
 const port = 3000;
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(express.json());
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"); // Allow these HTTP methods
@@ -247,6 +248,53 @@ app.get("/data", (req, res) => {
 
     res.json(groupedByTypeName);
   });
+});
+
+app.post("/api/toggle-like", (req, res) => {
+  console.log(req.body);
+  const { userId, applicationId, liked } = req.body;
+
+  // SQL to insert or update the like status in the `user_likes` table
+  const sql = `
+    INSERT INTO user_likes (userId, cardId, liked)
+    VALUES (?, ?, ?)
+    ON DUPLICATE KEY UPDATE liked = VALUES(liked);
+  `;
+
+  pool.query(sql, [userId, applicationId, liked], (err, result) => {
+    if (err) {
+      console.error("Error updating like status", err);
+      return res.status(500).send("Server error");
+    }
+    res.send({ message: "Like status updated successfully" });
+  });
+});
+
+app.get("/api/liked-applications/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  return new Promise((resolve, reject) => {
+    const query = `SELECT a.* FROM applications a
+    JOIN user_likes ul ON a.id = ul.cardId
+    WHERE ul.userId = ? AND ul.liked = 1`;
+
+    console.log(query);
+
+    pool.query(query, [userId], (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  })
+    .then((applications) => {
+      res.status(200).json(applications);
+    })
+    .catch((error) => {
+      console.error("Error retrieving applications:", error);
+      res.status(500).send("Internal Server Error");
+    });
 });
 
 app.listen(port, () => {

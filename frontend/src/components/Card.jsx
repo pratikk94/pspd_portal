@@ -1,36 +1,67 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
-export default function MultiActionAreaCard(props) {
+const CardComponent = ({ userId, applicationId }) => {
+  const [likedStatus, setLikedStatus] = useState("none"); // Possible values: 'liked', 'disliked', 'none'
+
+  useEffect(() => {
+    // Initially fetch the like status for the card
+    axios
+      .get(
+        `http://localhost:3000/api/application-status/${userId}?applicationId=${applicationId}`
+      )
+      .then((response) => {
+        setLikedStatus(response.data.status); // Assume the API returns { status: 'liked' } or { status: 'disliked' } or { status: 'none' }
+      })
+      .catch((error) =>
+        console.error("Error fetching like/dislike status:", error)
+      );
+  }, [userId, applicationId]);
+
+  const toggleLikeDislike = () => {
+    const liked = likedStatus !== "liked"; // If currently liked, we want to unlike it, and vice-versa
+    console.log(userId);
+    console.log(applicationId);
+    axios
+      .post(`http://localhost:3000/api/toggle-like`, {
+        userId,
+        applicationId,
+        liked,
+      })
+      .then(() => {
+        setLikedStatus(liked ? "liked" : "none"); // Optimistically update the UI based on the action
+      })
+      .catch((error) =>
+        console.error("Error toggling like/dislike status:", error)
+      );
+  };
+
   return (
-    <Card sx={{ maxWidth: "100%", maxHeight: 400 }} style={{ margin: 20 }}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="140"
-          image="https://blog.hubspot.com/hs-fs/hubfs/00-Blog-Related_Images/marketing-sales-alignment.png?width=1096&height=830&name=marketing-sales-alignment.png"
-          //"https://logo.com/image-cdn/images/kts928pd/production/b64ecf3895c91d29b9a5239e7c24388330e88299-731x731.png?w=1080&q=72"
-
-          alt="green iguana"
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {props.title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-      <CardActions>
-        <Button size="small" color="primary">
-          Open
-        </Button>
+    <Card sx={{ maxWidth: 345, margin: 2 }}>
+      <CardContent>
+        <Typography variant="body2" color="text.secondary">
+          {/* Card content goes here */}
+          Application Content Here
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites" onClick={toggleLikeDislike}>
+          {likedStatus === "liked" ? (
+            <FavoriteIcon color="error" />
+          ) : (
+            <FavoriteBorderIcon />
+          )}
+        </IconButton>
       </CardActions>
     </Card>
   );
-}
+};
+
+export default CardComponent;

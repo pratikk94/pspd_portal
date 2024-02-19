@@ -7,6 +7,8 @@ import ExpandableList from "../components/ExpandableList";
 
 export default function LandingPage() {
   const [count, setCount] = useState(0);
+  const [circleData, setCircleData] = useState([]);
+  const [typeData, setTypeData] = useState([]);
   const [dimensions, setDimensions] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -19,7 +21,7 @@ export default function LandingPage() {
           style={{
             position: "absolute",
             marginTop: dimensions.height * 0.05,
-            height: dimensions.height * 0.8,
+            height: dimensions.height * 0.9,
             width: dimensions.width * 0.15,
             top: 0,
             left: 0,
@@ -43,7 +45,7 @@ export default function LandingPage() {
             right: 0,
             zIndex: 10,
             marginTop: dimensions.height * 0.05,
-            height: dimensions.height * 0.8,
+            height: dimensions.height * 0.9,
             width: dimensions.width * 0.15,
             backgroundColor: "white",
             padding: "20px",
@@ -68,6 +70,22 @@ export default function LandingPage() {
       });
     }
 
+    const fetchDataApplication = async () => {
+      const response = await fetch("http://localhost:3000/data");
+      const data = await response.json();
+      setCircleData(data);
+    };
+
+    fetchDataApplication().catch(console.error);
+
+    const fetchDataType = async () => {
+      const response = await fetch("http://localhost:3000/types");
+      const data = await response.json();
+      setTypeData(data);
+    };
+
+    fetchDataType().catch(console.error);
+
     // Add event listener
     window.addEventListener("resize", handleResize);
 
@@ -81,7 +99,9 @@ export default function LandingPage() {
 
   const handleCircleHover = (index, rect) => {
     setModalVisible(true);
-    setModalContent(fields[index]);
+    //console.log(circleData[typeData[index]["type_name"]]);
+    //console.log(typeData[index]["type_name"]);
+    setModalContent(circleData[typeData[index]["type_name"]]);
     setModalPosition({ top: rect.top, left: rect.right }); // Adjust this based on your modal positioning logic
   };
 
@@ -97,14 +117,15 @@ export default function LandingPage() {
       }}
     >
       <CircleAroundImage
-        n={10}
+        n={typeData.length}
         width={dimensions.width}
         height={dimensions.height}
         onCircleHover={handleCircleHover}
+        data={typeData}
       />
       {isModalVisible && (
         <Modal position={modalPosition}>
-          <ExpandableList content={modalContent} />
+          <ExpandableList content={modalContent} data={modalContent} />
         </Modal>
       )}
     </div>
