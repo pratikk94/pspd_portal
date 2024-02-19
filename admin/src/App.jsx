@@ -291,6 +291,7 @@ function App() {
             required
           />
           <br />
+          <br />
           <TextField
             fullWidth
             label="Description"
@@ -300,6 +301,7 @@ function App() {
             required
           />
           <br />
+          <br />
           <TextField
             fullWidth
             type="file"
@@ -307,6 +309,7 @@ function App() {
             onChange={handleFileChange}
             required
           />
+          <br />
           <br />
           <TextField
             fullWidth
@@ -316,6 +319,7 @@ function App() {
             onChange={handleInputChange}
             required
           />
+          <br />
           <br />
           <FormControl fullWidth>
             <InputLabel>Type</InputLabel>
@@ -333,6 +337,7 @@ function App() {
               ))}
             </Select>
           </FormControl>
+          <br />
           <br />
           <Button type="submit" variant="contained" color="primary">
             Submit

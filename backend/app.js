@@ -216,6 +216,39 @@ function deleteApplicationFromDatabase(id) {
   });
 }
 
+app.get("/data", (req, res) => {
+  // Adjusted query to perform a join with the 'type' table and select 'type_name'
+  const query = `
+    SELECT yt.id, yt.name, yt.description, yt.image, yt.link, t.type_name
+    FROM applications yt
+    JOIN type t ON yt.type_id = t.type_id
+    ORDER BY t.type_name
+  `;
+
+  pool.query(query, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error querying the database");
+      return;
+    }
+
+    // Group results by 'type_name'
+    const groupedByTypeName = results.reduce((acc, currentValue) => {
+      (acc[currentValue.type_name] = acc[currentValue.type_name] || []).push({
+        id: currentValue.id,
+        name: currentValue.name,
+        description: currentValue.description,
+        image: currentValue.image,
+        link: currentValue.link,
+        // Exclude 'type_id' from each item, as we're now using 'type_name' for grouping
+      });
+      return acc;
+    }, {});
+
+    res.json(groupedByTypeName);
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
