@@ -2,350 +2,223 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Container,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-  TextField,
-  Button,
   Grid,
-  Select,
+  Card,
+  CardContent,
+  Typography,
+  Pagination,
+  Button,
+  Modal,
+  Box,
+  TextField,
   MenuItem,
-  FormControl,
-  InputLabel,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
+  IconButton,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+};
 
-function App() {
+const ApplicationsList = () => {
   const [applications, setApplications] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [types, setTypes] = useState([]);
-  const [formData, setFormData] = useState({
+  const [openModal, setOpenModal] = useState(false);
+  const [newApplication, setNewApplication] = useState({
     name: "",
-    description: "",
-    image: null,
+    desc: "",
     link: "",
+    image: "",
     type_id: "",
   });
-  const [selectedApplication, setSelectedApplication] = useState(null);
-  const [editMode, setEditMode] = useState(false);
+  const fetchApplications = async (currentPage) => {
+    try {
+      // Update the API URL to your endpoint
+      const response = await axios.get(
+        `http://localhost:3000/applications?page=${currentPage}&limit=9`
+      );
+      console.log(
+        `http://localhost:3000/applications?page=${currentPage}&limit=9`
+      );
+      setApplications(response.data.applications);
+      console.log(response.data.applications);
+      // Calculate total pages based on the totalCount returned by your API
+      const totalCount = response.data.totalCount;
+      setTotalPages(Math.ceil(totalCount / 9));
+    } catch (error) {
+      console.error("Failed to fetch applications:", error);
+    }
+  };
 
   useEffect(() => {
-    fetchApplications();
+    fetchApplications(page);
+    const fetchTypes = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/types");
+        setTypes(response.data);
+      } catch (error) {
+        console.error("Failed to fetch types:", error);
+      }
+    };
+
     fetchTypes();
-  }, []);
+  }, [page]);
 
-  const fetchApplications = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/applications");
-      setApplications(response.data);
-    } catch (error) {
-      console.error("Error fetching applications: ", error);
-    }
+  const handlePageChange = (event, value) => {
+    setPage(value);
   };
 
-  const fetchTypes = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/types");
-      setTypes(response.data);
-    } catch (error) {
-      console.error("Error fetching types: ", error);
-    }
-  };
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
   const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setNewApplication({ ...newApplication, [name]: value });
   };
 
-  const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      image: e.target.files[0],
-    });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmitNewApplication = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("name", newApplication.name);
+    formData.append("description", newApplication.desc);
+    formData.append("link", newApplication.link);
+    formData.append("type_id", newApplication.type_id);
+    formData.append("image", newApplication.image); // Assuming 'image' is the file
+
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append("name", formData.name);
-      formDataToSend.append("description", formData.description);
-      formDataToSend.append("image", formData.image);
-      formDataToSend.append("link", formData.link);
-      formDataToSend.append("type_id", formData.type_id);
-
-      await axios.post("http://localhost:3000/applications", formDataToSend);
-      fetchApplications();
-      // Clear form fields after submission
-      setFormData({
-        name: "",
-        description: "",
-        image: null,
-        link: "",
-        type_id: "",
-      });
-    } catch (error) {
-      console.error("Error submitting application: ", error);
-    }
-  };
-
-  const handleListItemClick = (application) => {
-    setSelectedApplication(application);
-    setEditMode(false); // Disable edit mode initially
-  };
-
-  const handleEditClick = () => {
-    setEditMode(true); // Enable edit mode
-    // Pre-fill form data with selected application's values
-    setFormData({
-      name: selectedApplication.name,
-      description: selectedApplication.description,
-      image: selectedApplication.image,
-      link: selectedApplication.link,
-      type_id: selectedApplication.type_id,
-    });
-  };
-
-  const handleCloseModal = () => {
-    setSelectedApplication(null);
-    setEditMode(false); // Disable edit mode when closing the modal
-  };
-
-  const handleUpdateApplication = async () => {
-    try {
-      const formDataToSend = new FormData();
-      formDataToSend.append("name", formData.name);
-      formDataToSend.append("description", formData.description);
-      formDataToSend.append("image", formData.image);
-      formDataToSend.append("link", formData.link);
-      formDataToSend.append("type_id", formData.type_id);
-
-      await axios.put(
-        `http://localhost:3000/applications/${selectedApplication.id}`,
-        formDataToSend
+      // Adjust the URL to your upload endpoint
+      const response = await axios.post(
+        "http://localhost:3000/applications",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
 
-      // Refresh applications list
-      fetchApplications();
-
-      // Close modal after update
+      // Handle the response, e.g., by updating the UI or notifying the user
       handleCloseModal();
+      // Optionally, fetch the updated list of applications
     } catch (error) {
-      console.error("Error updating application: ", error);
+      console.error("Failed to upload file:", error);
     }
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-      }}
-    >
-      <Container maxWidth="md">
-        <Typography variant="h3" align="center" gutterBottom>
-          Applications
-        </Typography>
-        <List>
-          {applications.map((application) => (
-            <ListItem
-              key={application.id}
-              button
-              onClick={() => handleListItemClick(application)}
-            >
-              <ListItemAvatar>
-                <Avatar
-                  alt={application.name}
-                  src={`localhost:3000/${application.image}`.replace(
-                    /\\/g,
-                    "/"
-                  )}
-                />
-              </ListItemAvatar>
-              <ListItemText
-                primary={application.name}
-                secondary={application.description}
-              />
-            </ListItem>
-          ))}
-        </List>
-
-        <Dialog open={Boolean(selectedApplication)} onClose={handleCloseModal}>
-          <DialogTitle>
-            {editMode ? "Edit Application" : "Application Details"}
-          </DialogTitle>
-          <DialogContent>
-            {selectedApplication && !editMode && (
-              <>
-                <Typography variant="body1" gutterBottom>
-                  Description: {selectedApplication.description}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  Image:{" "}
-                  <img
-                    style={{ width: 200, height: 200 }}
-                    src={
-                      "http://localhost:3000/" +
-                      selectedApplication.image.replace(/\\/g, "/")
-                    }
-                    alt="Application"
-                  />
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  Type: {types[selectedApplication.type_id - 1]["type_name"]}
-                </Typography>
-              </>
-            )}
-            {selectedApplication && editMode && (
-              <form onSubmit={handleUpdateApplication}>
-                <TextField
-                  fullWidth
-                  label="Name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                />
-                <br />
-                <TextField
-                  fullWidth
-                  label="Description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  required
-                />
-                <br />
-                <TextField
-                  fullWidth
-                  type="file"
-                  label="Image"
-                  name="image"
-                  onChange={handleFileChange}
-                  required
-                />
-                <br />
-                <TextField
-                  fullWidth
-                  label="Link"
-                  name="link"
-                  value={formData.link}
-                  onChange={handleInputChange}
-                  required
-                />
-                <br />
-                <FormControl fullWidth>
-                  <InputLabel>Type</InputLabel>
-                  <Select
-                    name="type_id"
-                    value={formData.type_id}
-                    onChange={handleInputChange}
-                    required
-                  >
-                    <MenuItem value="">Select Type</MenuItem>
-                    {types.map((type) => (
-                      <MenuItem key={type.type_id} value={type.type_id}>
-                        {type.type_name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <br />
-                <Button type="submit" variant="contained" color="primary">
-                  Update
-                </Button>
-              </form>
-            )}
-          </DialogContent>
-          <DialogActions>
-            {!editMode && (
-              <Button onClick={handleEditClick} color="primary">
-                Edit
-              </Button>
-            )}
-            <Button onClick={handleCloseModal} color="primary">
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        <Typography variant="h5" align="center" gutterBottom>
-          Add New Application
-        </Typography>
-        <form onSubmit={handleSubmit}>
+    <Container maxWidth="md">
+      <Typography variant="h4" gutterBottom>
+        Applications
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<AddIcon />}
+        onClick={handleOpenModal}
+      >
+        Add Application
+      </Button>
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <Box
+          sx={modalStyle}
+          component="form"
+          onSubmit={handleSubmitNewApplication}
+        >
+          <Typography variant="h6" marginBottom={2}>
+            Add New Application
+          </Typography>
           <TextField
             fullWidth
             label="Name"
             name="name"
-            value={formData.name}
+            value={newApplication.name}
             onChange={handleInputChange}
-            required
+            margin="normal"
           />
-          <br />
-          <br />
           <TextField
             fullWidth
             label="Description"
-            name="description"
-            value={formData.description}
+            name="desc"
+            value={newApplication.desc}
             onChange={handleInputChange}
-            required
+            margin="normal"
           />
-          <br />
-          <br />
           <TextField
-            fullWidth
             type="file"
-            name="image"
-            onChange={handleFileChange}
-            required
+            onChange={(e) =>
+              setNewApplication({ ...newApplication, image: e.target.files[0] })
+            }
+            margin="normal"
           />
-          <br />
-          <br />
           <TextField
             fullWidth
             label="Link"
             name="link"
-            value={formData.link}
+            value={newApplication.link}
             onChange={handleInputChange}
-            required
+            margin="normal"
           />
-          <br />
-          <br />
-          <FormControl fullWidth>
-            <InputLabel>Type</InputLabel>
-            <Select
-              name="type_id"
-              value={formData.type_id}
-              onChange={handleInputChange}
-              required
-            >
-              <MenuItem value="">Select Type</MenuItem>
-              {types.map((type) => (
-                <MenuItem key={type.type_id} value={type.type_id}>
-                  {type.type_name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <br />
-          <br />
-          <Button type="submit" variant="contained" color="primary">
+          <TextField
+            fullWidth
+            label="Type"
+            select
+            name="type_id"
+            value={newApplication.type_id}
+            onChange={handleInputChange}
+            margin="normal"
+          >
+            {types.map((type) => (
+              <MenuItem key={type.type_id} value={type.type_id}>
+                {type.type_name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+          >
             Submit
           </Button>
-        </form>
-      </Container>
-    </div>
-  );
-}
+        </Box>
+      </Modal>
 
-export default App;
+      <Grid container spacing={2}>
+        {applications.map((application) => (
+          <Grid item xs={12} sm={6} md={4} key={application.id}>
+            <Card style={{ height: 200 }}>
+              <CardContent>
+                <Typography variant="h5" component="h2">
+                  {application.name}
+                </Typography>
+                <Typography color="textSecondary">
+                  {application.description}
+                </Typography>
+                {/* Display more details as needed */}
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+      <Pagination
+        count={totalPages}
+        page={page}
+        onChange={handlePageChange}
+        color="primary"
+        style={{ marginTop: "20px", justifyContent: "center", display: "flex" }}
+      />
+    </Container>
+  );
+};
+
+export default ApplicationsList;

@@ -20,6 +20,14 @@ const pool = mysql.createPool({
   database: "website",
 });
 
+const query = (sql, params) =>
+  new Promise((resolve, reject) => {
+    pool.query(sql, params, (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -49,15 +57,44 @@ app.post("/applications", upload.single("image"), (req, res) => {
 });
 
 // Retrieve all applications
-app.get("/applications", (req, res) => {
-  getAllApplicationsFromDatabase()
-    .then((applications) => {
-      res.status(200).json(applications);
-    })
-    .catch((error) => {
-      console.error("Error retrieving applications:", error);
-      res.status(500).send("Internal Server Error");
-    });
+// app.get("/applications", (req, res) => {
+//   getAllApplicationsFromDatabase()
+//     .then((applications) => {
+//       res.status(200).json(applications);
+//     })
+//     .catch((error) => {
+//       console.error("Error retrieving applications:", error);
+//       res.status(500).send("Internal Server Error");
+//     });
+// });
+
+// Applications endpoint with pagination
+app.get("/applications", async (req, res) => {
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 9) || 9;
+  const offset = (page - 1) * limit;
+
+  try {
+    // Query to fetch applications
+    const applications = await query(
+      "SELECT id, name, description, image, link, type_id FROM applications order by `name` asc LIMIT ? OFFSET ? ",
+      [limit, offset]
+    );
+
+    // Query to get total count of applications
+    const totalCountResults = await query(
+      "SELECT COUNT(*) AS totalCount FROM applications"
+    );
+    const totalCount = totalCountResults[0].totalCount;
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalCount / limit);
+
+    res.json({ applications, totalCount, totalPages });
+  } catch (error) {
+    console.error("Failed to fetch applications:", error);
+    res.status(500).json({ message: "Error fetching applications" });
+  }
 });
 
 // Retrieve a single application by ID
@@ -151,7 +188,7 @@ function insertApplicationIntoDatabase(
 // Function to retrieve all applications from the database
 function getAllApplicationsFromDatabase() {
   return new Promise((resolve, reject) => {
-    const query = "SELECT * FROM applications";
+    const query = "SELECT * FROM applications order by `name` asc";
     pool.query(query, (error, results) => {
       console.log(results);
       if (error) {
