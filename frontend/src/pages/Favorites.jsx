@@ -56,17 +56,12 @@ const LikedApplicationsPage = () => {
       <Grid container spacing={2}>
         {applications.map((app) => (
           <Grid item xs={12} sm={6} md={4} key={app.applicationId}>
-            <Card style={{ height: 160 }}>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {app.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {app.description}
-                </Typography>
-              </CardContent>
+            <Card style={{ height: 240 }}>
               <CardActions>
-                <IconButton onClick={() => toggleLike(app.id)}>
+                <IconButton
+                  onClick={() => toggleLike(app.id)}
+                  style={{ marginLeft: "88%" }}
+                >
                   {!app.liked ? (
                     <FavoriteIcon color="error" />
                   ) : (
@@ -74,6 +69,19 @@ const LikedApplicationsPage = () => {
                   )}
                 </IconButton>
               </CardActions>
+              <CardContent>
+                <img
+                  style={{ height: 60 }}
+                  src={`http://localhost:3000/${app.image}`}
+                ></img>
+                <br />
+                <Typography gutterBottom variant="h5" component="div">
+                  {app.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {app.description}
+                </Typography>
+              </CardContent>
             </Card>
           </Grid>
         ))}
