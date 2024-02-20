@@ -4,7 +4,7 @@ import "../pages/LandingPage.css";
 import { fields } from "../constants/constants";
 import Card from "../components/Card";
 import ExpandableList from "../components/ExpandableList";
-
+import { backend_url } from "../urls";
 export default function LandingPage() {
   const [count, setCount] = useState(0);
   const [circleData, setCircleData] = useState([]);
@@ -71,7 +71,7 @@ export default function LandingPage() {
     }
 
     const fetchDataApplication = async () => {
-      const response = await fetch("http://localhost:3000/data");
+      const response = await fetch(`${backend_url}data`);
       const data = await response.json();
       setCircleData(data);
     };
@@ -79,7 +79,7 @@ export default function LandingPage() {
     fetchDataApplication().catch(console.error);
 
     const fetchDataType = async () => {
-      const response = await fetch("http://localhost:3000/types");
+      const response = await fetch(`${backend_url}types`);
       const data = await response.json();
       setTypeData(data);
     };

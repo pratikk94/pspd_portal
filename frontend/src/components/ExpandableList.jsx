@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Card from "./Card";
 import { fields } from "../constants/constants";
+import { backend_url } from "../urls";
 const ExpandableList = ({ items, data }) => {
   const [expandedItemIndex, setExpandedItemIndex] = useState(null);
 
@@ -30,7 +31,7 @@ const ExpandableList = ({ items, data }) => {
                 <Card
                   title={data[index]["name"]}
                   content={data[index]["description"]}
-                  image={`http://localhost:3000/${data[index]["image"]}`}
+                  image={`${backend_url}${data[index]["image"]}`}
                   applicationId={data[index]["id"]}
                   userId={1}
                   // onClick={() => handleCardClick(`Card ${index + 1}`)}

@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-
+import { backend_url } from "../urls";
 const LikedApplicationsPage = () => {
   const [applications, setApplications] = useState([]);
   const userId = 1;
@@ -21,7 +21,7 @@ const LikedApplicationsPage = () => {
   const fetchLikedApplications = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/liked-applications/${userId}`
+        `${backend_url}api/liked-applications/${userId}`
       );
       setApplications(response.data);
     } catch (error) {
@@ -38,7 +38,7 @@ const LikedApplicationsPage = () => {
 
       // Then, send the request to the backend to update the like status.
       // Note: This assumes your backend toggles the `liked` status and doesn't need a specific liked/disliked value.
-      await axios.post("http://localhost:3000/api/toggle-like", {
+      await axios.post(`${backend_url}api/toggle-like`, {
         userId,
         applicationId,
         liked: "0",
@@ -72,7 +72,7 @@ const LikedApplicationsPage = () => {
               <CardContent>
                 <img
                   style={{ height: 60 }}
-                  src={`http://localhost:3000/${app.image}`}
+                  src={`${backend_url}${app.image}`}
                 ></img>
                 <br />
                 <Typography gutterBottom variant="h5" component="div">
