@@ -30,7 +30,7 @@ const ExpandableList = ({ items, data }) => {
                 <Card
                   title={data[index]["name"]}
                   content={data[index]["description"]}
-                  image={data[index]["image"]}
+                  image={`http://localhost:3000/${data[index]["image"]}`}
                   applicationId={data[index]["id"]}
                   userId={1}
                   // onClick={() => handleCardClick(`Card ${index + 1}`)}

@@ -56,7 +56,7 @@ const LikedApplicationsPage = () => {
       <Grid container spacing={2}>
         {applications.map((app) => (
           <Grid item xs={12} sm={6} md={4} key={app.applicationId}>
-            <Card>
+            <Card style={{ height: 160 }}>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   {app.name}

@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
-const CardComponent = ({ userId, applicationId }) => {
+const CardComponent = ({ userId, applicationId, image, content, title }) => {
   const [likedStatus, setLikedStatus] = useState("none"); // Possible values: 'liked', 'disliked', 'none'
 
   useEffect(() => {
@@ -48,7 +48,12 @@ const CardComponent = ({ userId, applicationId }) => {
       <CardContent>
         <Typography variant="body2" color="text.secondary">
           {/* Card content goes here */}
-          Application Content Here
+          <img
+            src={image}
+            style={{ objectFit: "contain", width: 100, height: 60 }}
+          ></img>
+          <br />
+          {content}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>

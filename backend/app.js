@@ -270,6 +270,31 @@ app.post("/api/toggle-like", (req, res) => {
   });
 });
 
+app.get("/api/application-status/:userId", (req, res) => {
+  const { userId } = req.params;
+  const { applicationId } = req.query; // Get applicationId from query parameter
+
+  const query = `
+    SELECT liked
+    FROM user_likes
+    WHERE userId = ? AND cardId = ?
+  `;
+
+  pool.query(query, [userId, applicationId], (err, results) => {
+    if (err) {
+      console.error("Error fetching application status", err);
+      return res.status(500).send("Server error");
+    }
+    // If there are no results, the application has neither been liked nor disliked
+    if (results.length === 0) {
+      return res.json({ status: "none" });
+    }
+    // Return the liked status
+    const status = results[0].liked ? "liked" : "disliked";
+    res.json({ status });
+  });
+});
+
 app.get("/api/liked-applications/:userId", async (req, res) => {
   const { userId } = req.params;
 
