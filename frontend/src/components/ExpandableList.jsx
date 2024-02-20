@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Card from "./Card";
-import { fields } from "../constants/constants";
 import { backend_url } from "../urls";
 const ExpandableList = ({ items, data }) => {
   const [expandedItemIndex, setExpandedItemIndex] = useState(null);

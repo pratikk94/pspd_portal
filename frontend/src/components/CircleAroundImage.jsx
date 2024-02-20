@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./CircleAroundImage.css";
 import logo from "../assets/logo.png";
-import { fields } from "../constants/constants";
 // Modal component to be defined
 const Modal = ({ position, children, index }) => (
   <div

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import CircleAroundImage from "../components/CircleAroundImage";
 import "../pages/LandingPage.css";
-import { fields } from "../constants/constants";
 import Card from "../components/Card";
 import ExpandableList from "../components/ExpandableList";
 import { backend_url } from "../urls";
