@@ -18,6 +18,7 @@ const pool = mysql.createPool({
   user: "root",
   password: "Sayali20311!",
   database: "website",
+  connectionLimit: 10,
 });
 
 const query = (sql, params) =>
@@ -68,33 +69,33 @@ app.post("/applications", upload.single("image"), (req, res) => {
 //     });
 // });
 
-// Applications endpoint with pagination
-app.get("/applications", async (req, res) => {
-  const page = parseInt(req.query.page, 10) || 1;
-  const limit = parseInt(req.query.limit, 9) || 9;
+//Applications endpoint with pagination
+app.get("/applications", (req, res) => {
+  const { page = 1, limit = 9, search = "" } = req.query;
   const offset = (page - 1) * limit;
 
-  try {
-    // Query to fetch applications
-    const applications = await query(
-      "SELECT id, name, description, image, link, type_id FROM applications order by `name` asc LIMIT ? OFFSET ? ",
-      [limit, offset]
-    );
+  let searchQuery = "WHERE name LIKE ? OR description LIKE ?";
+  let queryParams = [`${search}%`, `${search}%`, Number(limit), Number(offset)];
 
-    // Query to get total count of applications
-    const totalCountResults = await query(
-      "SELECT COUNT(*) AS totalCount FROM applications"
-    );
-    const totalCount = totalCountResults[0].totalCount;
-
-    // Calculate total pages
-    const totalPages = Math.ceil(totalCount / limit);
-
-    res.json({ applications, totalCount, totalPages });
-  } catch (error) {
-    console.error("Failed to fetch applications:", error);
-    res.status(500).json({ message: "Error fetching applications" });
+  // If there's no search term, adjust the query and parameters accordingly
+  if (!search) {
+    searchQuery = "";
+    queryParams = [Number(limit), Number(offset)];
   }
+
+  pool.query(
+    `SELECT id, name, description, image, link, type_id FROM applications ${searchQuery} order by name asc LIMIT ? OFFSET ?`,
+    queryParams,
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({ error: error.message });
+      }
+
+      // Optionally, also return total count for pagination metadata (not shown here)
+      res.json(results);
+    }
+  );
 });
 
 // Retrieve a single application by ID
@@ -115,20 +116,31 @@ app.get("/applications/:id", (req, res) => {
 });
 
 // Update an existing application
+// Endpoint to update an application
 app.put("/applications/:id", upload.single("image"), (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const { name, description, link, type_id } = req.body;
-  const imageUrl = req.file.path;
-  updateApplicationInDatabase(id, name, description, imageUrl, link, type_id)
-    .then(() => {
-      res.status(200).send("Application updated successfully");
-    })
-    .catch((error) => {
-      console.error("Error updating application:", error);
-      res.status(500).send("Internal Server Error");
-    });
-});
+  let image = req.file ? req.file.path : null;
 
+  // SQL query to update the application
+  let sql = `UPDATE applications SET name = ?, description = ?, link = ?, type_id = ? ${
+    image ? ", image = ?" : ""
+  } WHERE id = ?`;
+
+  let queryParams = [name, description, link, type_id];
+  if (image) queryParams.push(image);
+  queryParams.push(id);
+
+  pool.query(sql, queryParams, (error, results) => {
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+    if (results.affectedRows === 0)
+      return res.status(404).json({ message: "Application not found" });
+    res.json({ message: "Application updated successfully", id });
+  });
+});
 // Delete an application by ID
 app.delete("/applications/:id", (req, res) => {
   const id = req.params.id;
@@ -158,6 +170,28 @@ app.get("/types", (req, res) => {
     }
     res.json(results);
   });
+});
+
+// Endpoint to get the number of applications
+app.get("/count", (req, res) => {
+  const connection = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "Sayali20311!",
+    database: "website",
+  });
+
+  connection.query(
+    "SELECT COUNT(*) as count FROM applications",
+    (err, results) => {
+      if (err) {
+        console.error("Error fetching types: ", err);
+        res.status(500).send("Internal Server Error");
+        return;
+      }
+      res.json(results);
+    }
+  );
 });
 
 // Function to insert application data into the database
