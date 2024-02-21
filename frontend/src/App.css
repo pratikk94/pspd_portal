@@ -5,7 +5,11 @@
 }
 
 .main {
-  background: url("./assets/bg3.png") no-repeat;
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.56),
+      rgba(255, 255, 255, 0.56)
+    ),
+    url("assets/test4.gif") no-repeat;
   background-size: cover;
   background-position: bottom;
 }
