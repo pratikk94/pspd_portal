@@ -19,8 +19,8 @@ export default function LandingPage() {
         <div
           style={{
             position: "absolute",
-            marginTop: dimensions.height * 0.05,
-            height: dimensions.height * 0.9,
+            marginTop: dimensions.height * 0.14,
+            height: dimensions.height * 0.88,
             width: dimensions.width * 0.15,
             top: 0,
             left: 0,
@@ -43,8 +43,8 @@ export default function LandingPage() {
             top: 0,
             right: 0,
             zIndex: 10,
-            marginTop: dimensions.height * 0.05,
-            height: dimensions.height * 0.9,
+            marginTop: dimensions.height * 0.14,
+            height: dimensions.height * 0.88,
             width: dimensions.width * 0.15,
             backgroundColor: "white",
             padding: "20px",
