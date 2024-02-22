@@ -1,7 +1,6 @@
 Video source: https://www.itcportal.com/businesses/paperboards-and-specialty-papers.aspx
 
 Functionalities developed:
-
 Admin :
 
 1.  Add new application : Can add name,description,link to application,
@@ -14,6 +13,9 @@ Front end:
 1.  View applications in the circle format.
 2.  Search application by name in nav bar
 3.  Favourite an application and open link from there.
+
+Font used:
+Raleway (Google fonts)
 
 Backend:
 
