@@ -116,6 +116,7 @@ const ApplicationsList = () => {
       // Handle the response, e.g., by updating the UI or notifying the user
       handleCloseModal();
       // Optionally, fetch the updated list of applications
+      fetchApplications();
     } catch (error) {
       console.error("Failed to upload file:", error);
     }
@@ -125,6 +126,18 @@ const ApplicationsList = () => {
     setCurrentApplication(application); // Set the current application
     console.log(application); // Debugging: Log to ensure correct application data is being set
     setEditModalOpen(true); // Then open the modal
+  };
+
+  const handleDeleteApplication = async (applicationId) => {
+    try {
+      await axios.delete(`http://localhost:3000/applications/${applicationId}`);
+      // Close the modal and refresh the list of applications
+      setEditModalOpen(false);
+      fetchApplications(); // Assuming you have a function to fetch applications
+    } catch (error) {
+      console.error("Failed to delete application:", error);
+      // Optionally, handle error (e.g., show an error message)
+    }
   };
 
   const handleEditSubmit = async (e) => {
@@ -364,9 +377,20 @@ const ApplicationsList = () => {
               </MenuItem>
             ))}
           </TextField>
-          <Button type="submit" variant="contained" sx={{ mt: 2 }}>
-            Save Changes
-          </Button>
+          <center>
+            <Button type="submit" variant="contained" sx={{ mt: 2 }}>
+              Save Changes
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => handleDeleteApplication(currentApplication.id)}
+              sx={{ mt: 2 }}
+              style={{ marginLeft: "1vw" }}
+            >
+              Delete Application
+            </Button>
+          </center>
         </Box>
       </Modal>
 
