@@ -57,18 +57,6 @@ app.post("/applications", upload.single("image"), (req, res) => {
     });
 });
 
-// Retrieve all applications
-// app.get("/applications", (req, res) => {
-//   getAllApplicationsFromDatabase()
-//     .then((applications) => {
-//       res.status(200).json(applications);
-//     })
-//     .catch((error) => {
-//       console.error("Error retrieving applications:", error);
-//       res.status(500).send("Internal Server Error");
-//     });
-// });
-
 //Applications endpoint with pagination
 app.get("/applications", (req, res) => {
   const { page = 1, limit = 9, search = "" } = req.query;
@@ -82,20 +70,6 @@ app.get("/applications", (req, res) => {
     searchQuery = "";
     queryParams = [Number(limit), Number(offset)];
   }
-
-  // pool.query(
-  //   `SELECT id, name, description, image, link, type_id FROM applications ${searchQuery} order by name asc LIMIT ? OFFSET ?`,
-  //   queryParams,
-  //   (error, results) => {
-  //     if (error) {
-  //       console.log(error);
-  //       return res.status(500).json({ error: error.message });
-  //     }
-
-  //     // Optionally, also return total count for pagination metadata (not shown here)
-  //     res.json(results);
-  //   }
-  // );
 
   const promises = [
     new Promise((resolve, reject) => {
@@ -269,7 +243,6 @@ function getAllApplicationsFromDatabase() {
   return new Promise((resolve, reject) => {
     const query = "SELECT * FROM applications order by `name` asc";
     pool.query(query, (error, results) => {
-      console.log(results);
       if (error) {
         reject(error);
       } else {
@@ -367,7 +340,6 @@ app.get("/data", (req, res) => {
 });
 
 app.post("/api/toggle-like", (req, res) => {
-  console.log(req.body);
   const { userId, applicationId, liked } = req.body;
 
   // SQL to insert or update the like status in the `user_likes` table
@@ -418,8 +390,6 @@ app.get("/api/liked-applications/:userId", async (req, res) => {
     const query = `SELECT a.* FROM applications a
     JOIN user_likes ul ON a.id = ul.cardId
     WHERE ul.userId = ? AND ul.liked = 1`;
-
-    console.log(query);
 
     pool.query(query, [userId], (error, results) => {
       if (error) {
