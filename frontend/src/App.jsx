@@ -4,6 +4,7 @@ import LandingPage from "./pages/LandingPage";
 import RequestAccess from "./pages/RequestAccess";
 import Favorites from "./pages/Favorites";
 import "./App.css";
+import SearchResultsPage from "./pages/SearchResults";
 export default function App() {
   return (
     <div className="main">
@@ -16,6 +17,7 @@ export default function App() {
           <Route index element={<LandingPage />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/requestAccess" element={<RequestAccess />} />
+          <Route path="/search" element={<SearchResultsPage />} />
 
           {/* Using path="*"" means "match anything", so this route
                 acts like a catch-all for URLs that we don't have explicit

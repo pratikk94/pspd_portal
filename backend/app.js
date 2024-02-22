@@ -74,8 +74,8 @@ app.get("/applications", (req, res) => {
   const { page = 1, limit = 9, search = "" } = req.query;
   const offset = (page - 1) * limit;
 
-  let searchQuery = "WHERE name LIKE ? OR description LIKE ?";
-  let queryParams = [`${search}%`, `${search}%`, Number(limit), Number(offset)];
+  let searchQuery = "WHERE apps.name LIKE ? ";
+  let queryParams = [`${search}%`, Number(limit), Number(offset)];
 
   // If there's no search term, adjust the query and parameters accordingly
   if (!search) {
@@ -83,19 +83,64 @@ app.get("/applications", (req, res) => {
     queryParams = [Number(limit), Number(offset)];
   }
 
-  pool.query(
-    `SELECT id, name, description, image, link, type_id FROM applications ${searchQuery} order by name asc LIMIT ? OFFSET ?`,
-    queryParams,
-    (error, results) => {
-      if (error) {
-        console.log(error);
-        return res.status(500).json({ error: error.message });
-      }
+  // pool.query(
+  //   `SELECT id, name, description, image, link, type_id FROM applications ${searchQuery} order by name asc LIMIT ? OFFSET ?`,
+  //   queryParams,
+  //   (error, results) => {
+  //     if (error) {
+  //       console.log(error);
+  //       return res.status(500).json({ error: error.message });
+  //     }
 
-      // Optionally, also return total count for pagination metadata (not shown here)
-      res.json(results);
-    }
-  );
+  //     // Optionally, also return total count for pagination metadata (not shown here)
+  //     res.json(results);
+  //   }
+  // );
+
+  const promises = [
+    new Promise((resolve, reject) => {
+      pool.query(
+        `SELECT apps.id,apps.name,apps.description,apps.image, apps.link, apps.type_id ,CASE      WHEN la.cardId IS NULL THEN 0  WHEN la.cardID IS NOT NULL and la.liked=0 then 0  ELSE 1    END AS liked  FROM applications apps  LEFT JOIN (   SELECT cardId,liked FROM user_likes )        la ON apps.id = la.cardId ${searchQuery} order by name asc LIMIT ? OFFSET ?`,
+        queryParams,
+        (err, results) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    }),
+    new Promise((resolve, reject) => {
+      pool.query(
+        `SELECT COUNT(*) as count FROM applications apps ${searchQuery}`,
+        queryParams,
+        (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    }),
+  ];
+
+  // Use Promise.all() to run the queries simultaneously
+  Promise.all(promises)
+    .then((results) => {
+      // Combine the results of the two queries
+      const [data, count] = [results[0], results[1]];
+      const combinedResults = { data, count };
+
+      // Send the combined results back to the client
+      res.send(combinedResults);
+    })
+    .catch((err) => {
+      // Handle any errors
+      res.send(err);
+    });
 });
 
 // Retrieve a single application by ID

@@ -47,7 +47,9 @@ const ApplicationsList = () => {
       const response = await axios.get(
         `http://localhost:3000/applications?page=${page}&limit=9&search=${searchTerm}`
       );
-      setApplications(response.data || []);
+      setApplications(response.data["data"] || []);
+      console.log(response.data["count"][0]["count"]);
+      setTotalPages(Math.ceil(response.data["count"][0]["count"] / 9));
     } catch (error) {
       console.error("Failed to fetch applications:", error);
     }
@@ -63,19 +65,7 @@ const ApplicationsList = () => {
       }
     };
 
-    const fetchNumberOfPages = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/count");
-
-        console.log(response.data[0].count);
-        setTotalPages(Math.ceil(response.data[0].count / 9));
-      } catch (error) {
-        console.error("Failed to fetch types:", error);
-      }
-    };
-
     fetchApplications();
-    fetchNumberOfPages();
     fetchTypes();
   }, [page, searchTerm]);
 
