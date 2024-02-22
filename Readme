@@ -1,0 +1,40 @@
+Video source: https://www.itcportal.com/businesses/paperboards-and-specialty-papers.aspx
+
+Functionalities developed:
+
+Admin :
+
+1.  Add new application : Can add name,description,link to application,
+    image of application, type of application (HR, S&M etc..)
+2.  Update existing application : Can update any of the above fields.
+3.  Delete current applciation.
+
+Front end:
+
+1.  View applications in the circle format.
+2.  Search application by name in nav bar
+3.  Favourite an application and open link from there.
+
+Backend:
+
+1.  APIs for all above functionalities.
+
+Libraries used:
+
+1.  MaterialUI (Frontend, Admin) UI enhancements.
+2.  React-router-dom (Frontend) Navigation between pages.
+3.  Mysql (Backend) Connection to Mysql db.
+4.  Multer (Backend) Fetching applications and storing in backend.
+
+Backend used:
+
+1.  Mysql db.
+
+Work pending:
+
+1.  Fetching AD id from ITC network.
+2.  Updating the apis for liked applications as per userID(which is AD-id).
+3.  Collecting the links of applications with their logos,
+    descriptions of applications.
+4.  Request access to applications page.
+5.  Migrate to sql database and update any query if needed.
