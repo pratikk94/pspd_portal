@@ -1,5 +1,5 @@
 /* Navbar.css */
-.navbar {
+/* .navbar {
   display: flex;
   justify-content: start;
   align-items: center;
@@ -26,10 +26,56 @@
 
 .nav-item:hover {
   color: #4a8fe3;
+} */
+
+.header {
+  display: flex;
+  /* position: fixed; */
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  margin-top: 5rem;
+  background: #f8f8f8;
+  height: 8vh;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header .logo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  background: #f8f8f8dd;
+  width: 100vw;
+  margin-left: -4vw;
+  margin-top: 2vh;
+}
+
+.nav-links li {
+  padding: 1rem 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 2.4vh;
 }
 
 .search-bar {
   display: flex;
+}
+
+.logo {
+  max-width: 12vw;
+  max-height: 9vh;
+  margin-right: 38vw;
+  margin-left: 2vw;
 }
 
 .search-bar input[type="text"] {

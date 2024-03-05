@@ -15,74 +15,117 @@ export default function NavBar({ onNavClick }) {
   };
 
   return (
-    <div>
-      {/* A "layout route" is a good place to put markup you want to
-          share across all the pages on your site, like navigation. */}
-      <nav className="navbar">
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          width="100%"
-        >
-          <div style={{ display: "flex", alignItems: "center" }}>
+    // <div>
+    //   {/* A "layout route" is a good place to put markup you want to
+    //       share across all the pages on your site, like navigation. */}
+    //   <nav className="navbar">
+    //     <Box
+    //       display="flex"
+    //       justifyContent="space-between"
+    //       alignItems="center"
+    //       width="100%"
+    //     >
+    //       <div style={{ display: "flex", alignItems: "center" }}>
+    //         <Link to="/">
+    //           <img src={logo} className="navBarIcon"></img>
+    //         </Link>
+    //         <Link className="nav-item" to="/">
+    //           Home
+    //         </Link>
+    //         <Link className="nav-item" to="/favorites">
+    //           Favorites
+    //         </Link>
+    //         <Link className="nav-item" to="/requestAccess">
+    //           Request access
+    //         </Link>
+    //       </div>
+    //       <form
+    //         onSubmit={handleSearch}
+    //         style={{
+    //           display: "flex",
+    //           alignItems: "center",
+    //           marginLeft: -40,
+    //           marginRight: 40,
+    //         }}
+    //       >
+    //         <TextField
+    //           variant="outlined"
+    //           size="small"
+    //           label="Search"
+    //           value={searchQuery}
+    //           style={{ marginLeft: "-2vw", width: "20vw" }}
+    //           onChange={(e) => setSearchQuery(e.target.value)}
+    //         />
+    //         <Button type="submit" color="inherit" sx={{ ml: 1 }}>
+    //           Search
+    //         </Button>
+    //       </form>
+    //     </Box>
+
+    // {/* <form
+    //   onSubmit={handleSearch}
+    //   style={{ display: "flex", alignItems: "center", right: "0" }}
+    // >
+    //   <TextField
+    //     variant="outlined"
+    //     size="small"
+    //     label="Search"
+    //     value={searchQuery}
+    //     onChange={(e) => setSearchQuery(e.target.value)}
+    //   />
+    //   <Button type="submit" color="inherit" sx={{ ml: 1 }}>
+    //     Search
+    //   </Button>
+    // </form> */}
+    //   </nav>
+
+    //   {/* An <Outlet> renders whatever child route is currently active,
+    //       so you can think about this <Outlet> as a placeholder for
+    //       the child routes we defined above. */}
+    //   <Outlet />
+    // </div>
+    <div className="header">
+      <nav>
+        <ul className="nav-links">
+          <li>
             <Link to="/">
-              <img src={logo} className="navBarIcon"></img>
+              <img src={logo} className="logo"></img>
             </Link>
+          </li>
+          <li>
             <Link className="nav-item" to="/">
               Home
             </Link>
+          </li>
+          <li>
             <Link className="nav-item" to="/favorites">
               Favorites
             </Link>
+          </li>
+          <li>
             <Link className="nav-item" to="/requestAccess">
               Request access
             </Link>
-          </div>
-          <form
-            onSubmit={handleSearch}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginLeft: -40,
-              marginRight: 40,
-            }}
-          >
-            <TextField
-              variant="outlined"
-              size="small"
-              label="Search"
-              value={searchQuery}
-              style={{ marginLeft: "-2vw", width: "20vw" }}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Button type="submit" color="inherit" sx={{ ml: 1 }}>
-              Search
-            </Button>
-          </form>
-        </Box>
-
-        {/* <form
-          onSubmit={handleSearch}
-          style={{ display: "flex", alignItems: "center", right: "0" }}
-        >
-          <TextField
-            variant="outlined"
-            size="small"
-            label="Search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <Button type="submit" color="inherit" sx={{ ml: 1 }}>
-            Search
-          </Button>
-        </form> */}
+          </li>
+          <li>
+            <form
+              onSubmit={handleSearch}
+              style={{ display: "flex", alignItems: "center", right: "0" }}
+            >
+              <TextField
+                variant="outlined"
+                size="small"
+                label="Search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Button type="submit" color="inherit" sx={{ ml: 1 }}>
+                Search
+              </Button>
+            </form>
+          </li>
+        </ul>
       </nav>
-
-      {/* An <Outlet> renders whatever child route is currently active,
-          so you can think about this <Outlet> as a placeholder for
-          the child routes we defined above. */}
-      <Outlet />
     </div>
   );
 }

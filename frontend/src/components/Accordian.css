@@ -1,0 +1,291 @@
+/* html {
+  background-color: #202b2e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: "IM Fell French Canon";
+}
+
+body {
+  perspective: 800px;
+}
+
+body * {
+  transform-style: preserve-3d;
+}
+
+p,
+h1 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.screen {
+  width: 400px;
+  margin: 50px;
+  padding-top: 120px;
+  background: transparent;
+  transform: rotate3d(0, 1, 0, -0deg);
+}
+
+.screen .card {
+  margin: 0;
+  height: 200px;
+  width: 70vw;
+  transition: height 0.5s ease-in-out;
+}
+
+.screen .card .front-box {
+  height: 200px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.screen .card .front-box:hover {
+  cursor: pointer;
+}
+
+.screen .card .front-box:hover h1 {
+  border-bottom: 2px solid #d8303d;
+}
+
+.screen .card .front-box:hover p {
+  opacity: 1;
+}
+
+.screen .card .front-box h1 {
+  border-bottom: 2px solid transparent;
+  padding-bottom: 5px;
+  color: white;
+  z-index: 20;
+  transition: all 0.4s ease-in-out;
+}
+
+.screen .card .front-box p {
+  color: white;
+  font-style: italic;
+  padding-top: 10px;
+  font-weight: 400;
+  opacity: 0;
+  transition: all 0.5s ease-in-out 0.2s;
+}
+
+.details-1,
+.details-2 {
+  background-color: white;
+  position: relative;
+  height: 70px;
+  z-index: -10;
+  transition: all 0.5s ease-in-out;
+  display: flex;
+}
+
+.details-1 {
+  transform: rotate3d(1, 0, 0, -90deg);
+  transform-origin: top;
+  box-shadow: inset 0px -45px 52px 0px rgba(0, 0, 0, 0.75);
+}
+
+.details-1 p,
+.details-2 p {
+  margin: auto;
+}
+
+.details-2 {
+  transform: translate3d(0, -140px, 0px) rotate3d(1, 0, 0, 90deg);
+  transform-origin: bottom;
+  box-shadow: inset 0px 0px 100px 30px rgba(0, 0, 0, 0.75);
+}
+
+.unfold {
+  height: 70px;
+  transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0deg) !important;
+  box-shadow: inset 0px -45px 52px -70px rgba(0, 0, 0, 0.75) !important;
+}
+
+.span {
+  height: 340px !important;
+}
+
+/* Example content - make sure this matches your actual CSS needs */
+.card {
+  margin: 0;
+  height: 200px;
+  transition: height 0.5s ease-in-out;
+}
+
+.front-box {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.details-1,
+.details-2 {
+  background-color: white;
+  position: relative;
+  height: 70px;
+  z-index: -10;
+  transition: all 0.5s ease-in-out;
+  display: flex;
+}
+*/ html {
+  background-color: #202b2e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: "IM Fell French Canon";
+}
+
+body {
+  perspective: 800px;
+}
+
+body * {
+  transform-style: preserve-3d;
+}
+
+p,
+h1 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.screen {
+  width: 400px;
+  margin: 50px;
+  padding-top: 120px;
+  background: transparent;
+  transform: rotate3d(0, 1, 0, -0deg);
+}
+
+.screen .card {
+  margin: 0;
+  height: 200px;
+  width: 70vw;
+  transition: height 0.5s ease-in-out;
+}
+
+.screen .card .front-box {
+  height: 200px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.screen .card .front-box:hover {
+  cursor: pointer;
+}
+
+.screen .card .front-box:hover h1,
+.screen .card .front-box:hover p {
+  border-bottom: 2px solid #d8303d;
+  opacity: 1;
+}
+
+.screen .card .front-box h1 {
+  border-bottom: 2px solid transparent;
+  padding-bottom: 5px;
+  color: white;
+  z-index: 20;
+  transition: all 0.4s ease-in-out;
+}
+
+.screen .card .front-box p {
+  color: white;
+  font-style: italic;
+  padding-top: 10px;
+  font-weight: 400;
+  opacity: 0;
+  transition: all 0.5s ease-in-out 0.2s;
+}
+
+.details-1,
+.details-2 {
+  background-color: white;
+  position: relative;
+  height: 70px;
+  z-index: -10;
+  transition: all 0.5s ease-in-out;
+  display: flex;
+}
+
+.details-1 p,
+.details-2 p {
+  margin: auto;
+}
+
+.details-1 {
+  transform: rotate3d(1, 0, 0, -90deg);
+  transform-origin: top;
+  box-shadow: inset 0px -45px 52px 0px rgba(0, 0, 0, 0.75);
+}
+
+.details-2 {
+  transform: translate3d(0, -140px, 0px) rotate3d(1, 0, 0, 90deg);
+  transform-origin: bottom;
+  box-shadow: inset 0px 0px 100px 30px rgba(0, 0, 0, 0.75);
+}
+
+.details-1,
+.details-2 {
+  transition: transform 0.5s ease-in-out;
+  transform-origin: top;
+}
+
+.unfold {
+  height: 70px;
+  transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0deg) !important;
+  box-shadow: inset 0px -45px 52px -70px rgba(0, 0, 0, 0.75) !important;
+}
+.unfold {
+  transform: rotateX(0deg);
+}
+.span {
+  height: 340px !important;
+}
+
+/* Container for sub-cards, allowing dynamic height */
+.sub-cards-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center sub-cards horizontally */
+  width: 100%; /* Ensure it takes the full width of its parent */
+  padding: 10px; /* Optional padding */
+  min-height: 100px; /* Minimum height to ensure container visibility */
+  overflow: hidden; /* Hide overflowed content */
+}
+
+/* Individual sub-card styling */
+.sub-card {
+  margin-bottom: 10px; /* Space between sub-cards */
+  width: 90%; /* Adjust width as needed */
+  /* Additional styling for sub-cards */
+}
+
+.sub-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+.sub-card img {
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.sub-card h1,
+.sub-card p {
+  color: #333;
+}

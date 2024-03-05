@@ -1,10 +1,13 @@
 import { Routes, Route, Outlet, Link } from "react-router-dom";
 import NavBar from "./components/Navbar";
-import LandingPage from "./pages/LandingPage";
 import RequestAccess from "./pages/RequestAccess";
 import Favorites from "./pages/Favorites";
 import "./App.css";
 import SearchResultsPage from "./pages/SearchResults";
+import OrbitingCircles from "./pages/LandingPage";
+import PaperRolls from "./pages/LandingPage";
+import BooksTable from "./pages/LandingPage";
+import Home from "./pages/Home";
 export default function App() {
   return (
     <div className="main">
@@ -12,43 +15,25 @@ export default function App() {
             parent route paths, and nested route elements render inside
             parent route elements. See the note about <Outlet> below. */}
 
-      <Routes>
+      {/* <Routes>
         <Route path="/" element={<NavBar />}>
-          <Route index element={<LandingPage />} />
+          <Route
+            index
+            element={
+              <Home />
+              //<OrbitingCircles numberOfCircles={10} />
+            }
+          />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/requestAccess" element={<RequestAccess />} />
           <Route path="/search" element={<SearchResultsPage />} />
 
           {/* Using path="*"" means "match anything", so this route
                 acts like a catch-all for URLs that we don't have explicit
-                routes for. */}
+                routes for. }
           <Route path="*" element={<NoMatch />} />
         </Route>
-      </Routes>
-    </div>
-  );
-}
-
-function Home() {
-  return (
-    <div>
-      <h2>Home</h2>
-    </div>
-  );
-}
-
-function About() {
-  return (
-    <div>
-      <h2>About</h2>
-    </div>
-  );
-}
-
-function Dashboard() {
-  return (
-    <div>
-      <h2>Dashboard</h2>
+      </Routes> */}
     </div>
   );
 }

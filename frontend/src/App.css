@@ -4,12 +4,60 @@
   text-align: center;
 }
 
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
 .main {
-  background: linear-gradient(
-      rgba(255, 255, 255, 0.56),
-      rgba(255, 255, 255, 0.56)
-    ),
-    url("assets/test4.gif") no-repeat;
+  background: url("assets/paper_making2.png") no-repeat;
   background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
   background-position: bottom;
 }
+/*
+.solar-system {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 800px; /* Creates a 3D space by giving depth perception 
+}
+
+.central-circle {
+  width: 250px;
+  height: 50px;
+  border-radius: 50%;
+  background-image: radial-gradient(
+    circle at center,
+    #ffdd00 0%,
+    #ffaa00 70%,
+    #cc8800 100%
+  );
+  box-shadow: 0 0 8px #ffdd00;
+  transform: translateZ(0px);
+}
+
+.orbiting-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-image: radial-gradient(
+    circle at center,
+    #6699ff 0%,
+    #3366ff 70%,
+    #0033cc 100%
+  );
+  box-shadow: 0 0 8px #6699ff;
+  position: absolute;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+*/

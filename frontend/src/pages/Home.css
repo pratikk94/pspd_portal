@@ -1,0 +1,24 @@
+.product-feature {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  margin-top: 10vw;
+  background-size: cover;
+  overflow-y: auto;
+}
+
+.product-feature h1 {
+  font-size: 3rem;
+  color: #fff;
+}
+
+.product-feature p {
+  color: #fff;
+}
+
+.product-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}

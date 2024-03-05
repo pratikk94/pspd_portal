@@ -40,3 +40,9 @@ Work pending:
     descriptions of applications.
 4.  Request access to applications page.
 5.  Migrate to sql database and update any query if needed.
+
+NEW:
+
+6. Sort by name ascending.
+7. Add type of cateogry for fav application.
+8. Add HR or category specific content. (TOP scroll /Accordina Scroll )

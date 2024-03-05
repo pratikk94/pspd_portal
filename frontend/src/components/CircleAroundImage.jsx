@@ -68,7 +68,7 @@ const CircleAroundImage = ({ n, width, height, onCircleHover, data }) => {
         className="center-image"
         onMouseEnter={() => setImageHovered(true)}
         style={{
-          width: width / 10,
+          width: width / 12,
           height: height / 8,
           // marginLeft: width / 15,
           // marginTop: height / 10,
@@ -107,6 +107,7 @@ const CircleAroundImage = ({ n, width, height, onCircleHover, data }) => {
                 width: width * 0.065,
                 fontSize: height * 0.015,
                 fontWeight: 600,
+                fontSize: height * 0.015,
                 wordWrap: "anywhere",
                 textAlign: "center",
                 color: hoveredElementIndex != index ? "white" : "#1672e3",

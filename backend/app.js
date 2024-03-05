@@ -307,15 +307,20 @@ function deleteApplicationFromDatabase(id) {
 }
 
 app.get("/data", (req, res) => {
-  // Adjusted query to perform a join with the 'type' table and select 'type_name'
+  // Assuming you have a way to identify the current user, perhaps through authentication middleware
+  //const userId = req.user.id; // Replace this with your method of retrieving the current user's ID
+  const userId = 1;
+
+  // Adjusted query to perform a join with the 'user_likes' table
   const query = `
-    SELECT yt.id, yt.name, yt.description, yt.image, yt.link, t.type_name
+    SELECT yt.id, yt.name, yt.description, yt.image, yt.link, t.type_name, IF(ul.liked IS NULL, 0, ul.liked) AS liked
     FROM applications yt
     JOIN type t ON yt.type_id = t.type_id
+    LEFT JOIN user_likes ul ON yt.id = ul.cardId AND ul.userId = ?
     ORDER BY t.type_name
   `;
 
-  pool.query(query, (err, results) => {
+  pool.query(query, [userId], (err, results) => {
     if (err) {
       console.error(err);
       res.status(500).send("Error querying the database");
@@ -330,7 +335,7 @@ app.get("/data", (req, res) => {
         description: currentValue.description,
         image: currentValue.image,
         link: currentValue.link,
-        // Exclude 'type_id' from each item, as we're now using 'type_name' for grouping
+        liked: currentValue.liked, // This now includes the 'liked' status
       });
       return acc;
     }, {});
