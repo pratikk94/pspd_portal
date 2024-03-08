@@ -232,7 +232,7 @@ app.get("/api/data", async (req, res) => {
         FROM application yt
         JOIN type t ON yt.type_id = t.type_id
         LEFT JOIN user_likes ul ON yt.id = ul.cardId AND ul.userId = @userId
-        ORDER BY t.type_name
+        ORDER BY yt.name asc
     `;
 
   try {
@@ -338,6 +338,7 @@ app.get("/api/liked-applications/:userId", async (req, res) => {
         SELECT a.* FROM application a
         JOIN user_likes ul ON a.id = ul.cardId
         WHERE ul.userId = @userId AND ul.liked = 1
+        order by a.name
       `);
 
     res.status(200).json(result.recordset);

@@ -30,20 +30,20 @@ Libraries used:
 
 Backend used:
 
-1.  Mysql db.
+1.  Mysql db and MS-sql
 
 Work pending:
 
-1.  Fetching AD id from ITC network.
-2.  Updating the apis for liked applications as per userID(which is AD-id).
+1.  Fetching AD id from ITC network. (Pending)
+2.  Updating the apis for liked applications as per userID(which is AD-id). (Pending)
 3.  Collecting the links of applications with their logos,
-    descriptions of applications.
-4.  Request access to applications page.
-5.  Migrate to sql database and update any query if needed.
+    descriptions of applications. (Pending)
+4.  Request access to applications page. (Pending)
+5.  Migrate to Ms-sql database and update any query where ever needed. (Done)
 
 NEW:
 
-6. Sort by name ascending.
+6. Sort by name ascending. (Done)
 7. Add type of cateogry for fav application.
-8. Add HR or category specific content. (TOP scroll /Accordina Scroll )
+8. Add HR or category specific content. (TOP scroll /Accordian Scroll )
 9. collpase all
