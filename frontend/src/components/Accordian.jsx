@@ -83,7 +83,7 @@ export default function EnhancedAccordion() {
                   }}
                 >
                   <img
-                    src={`http://localhost:3002/${item.image}`}
+                    src={`${backend_url}/${item.image}`}
                     alt="Item logo"
                     style={{
                       width: "6vw",
