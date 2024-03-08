@@ -5,12 +5,13 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Box from "@mui/material/Box";
+import { backend_url } from "../urls";
 
 export default function EnhancedAccordion() {
   const [data, setData] = useState({});
 
   useEffect(() => {
-    fetch("http://localhost:3000/data")
+    fetch(`${backend_url}/data`)
       .then((response) => response.json())
       .then((data) => setData(data))
       .catch((error) => console.error("Fetching data failed", error));
@@ -82,7 +83,7 @@ export default function EnhancedAccordion() {
                   }}
                 >
                   <img
-                    src={`http://localhost:3000/${item.image}`}
+                    src={`http://localhost:3002/${item.image}`}
                     alt="Item logo"
                     style={{
                       width: "6vw",

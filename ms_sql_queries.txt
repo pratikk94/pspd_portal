@@ -1,0 +1,18 @@
+CREATE TABLE applications (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    image VARBINARY(MAX), -- Equivalent to BLOB in MySQL
+    link VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE [type] (
+    type_id INT IDENTITY(1,1) PRIMARY KEY,
+    type_name VARCHAR(255) NOT NULL
+);
+
+ALTER TABLE applications
+ADD type_id INT;
+
+ALTER TABLE applications
+ADD CONSTRAINT FK_applications_type FOREIGN KEY (type_id) REFERENCES [type](type_id);

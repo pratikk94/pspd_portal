@@ -15,6 +15,7 @@ import {
   IconButton,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { backend_url } from "../../frontend/src/urls";
 const modalStyle = {
   position: "absolute",
   top: "50%",
@@ -45,7 +46,7 @@ const ApplicationsList = () => {
   const fetchApplications = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/applications?page=${page}&limit=9&search=${searchTerm}`
+        `${backend_url}/applications?page=${page}&limit=9&search=${searchTerm}`
       );
       setApplications(response.data["data"] || []);
       console.log(response.data["count"][0]["count"]);
@@ -58,7 +59,7 @@ const ApplicationsList = () => {
   useEffect(() => {
     const fetchTypes = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/types");
+        const response = await axios.get(`${backend_url}/types`);
         setTypes(response.data);
       } catch (error) {
         console.error("Failed to fetch types:", error);
@@ -104,7 +105,7 @@ const ApplicationsList = () => {
     try {
       // Adjust the URL to your upload endpoint
       const response = await axios.post(
-        "http://localhost:3000/applications",
+        `${backend_url}/applications`,
         formData,
         {
           headers: {
@@ -130,7 +131,7 @@ const ApplicationsList = () => {
 
   const handleDeleteApplication = async (applicationId) => {
     try {
-      await axios.delete(`http://localhost:3000/applications/${applicationId}`);
+      await axios.delete(`${backend_url}/applications/${applicationId}`);
       // Close the modal and refresh the list of applications
       setEditModalOpen(false);
       fetchApplications(); // Assuming you have a function to fetch applications
@@ -154,7 +155,7 @@ const ApplicationsList = () => {
 
     try {
       await axios.put(
-        `http://localhost:3000/applications/${currentApplication.id}`,
+        `${backend_url}/applications/${currentApplication.id}`,
         formData,
         {
           headers: {

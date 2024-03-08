@@ -1,7 +1,8 @@
 // src/api/ApplicationService.js
 import axios from "axios";
+import { backend_url } from "../../frontend/src/urls";
 
-const API_URL = "http://localhost:3000/applications";
+const API_URL = `${backend_url}/applications`;
 
 export const fetchApplications = (page = 1, limit = 9, search = "") => {
   return axios

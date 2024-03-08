@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { createRoot } from "react-dom/client";
 
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
@@ -11,14 +10,7 @@ import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
 import SearchResultsPage from "./pages/SearchResults";
 import Footer from "./components/Footer";
-import OrbitingCircles from "./pages/LandingPage";
-// ReactDOM.createRoot(document.getElementById("root")).render(
-//   <React.StrictMode>
-//     <BrowserRouter>
-//       <App />
-//     </BrowserRouter>
-//   </React.StrictMode>
-// );
+
 function NoMatch() {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>

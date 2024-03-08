@@ -15,7 +15,7 @@ const CardComponent = ({ userId, applicationId, image, content, title }) => {
     // Initially fetch the like status for the card
     axios
       .get(
-        `${backend_url}api/application-status/${userId}?applicationId=${applicationId}`
+        `${backend_url}/application-status/${userId}?applicationId=${applicationId}`
       )
       .then((response) => {
         setLikedStatus(response.data.status); // Assume the API returns { status: 'liked' } or { status: 'disliked' } or { status: 'none' }
@@ -30,7 +30,7 @@ const CardComponent = ({ userId, applicationId, image, content, title }) => {
     console.log(userId);
     console.log(applicationId);
     axios
-      .post(`${backend_url}api/toggle-like`, {
+      .post(`${backend_url}/toggle-like`, {
         userId,
         applicationId,
         liked,

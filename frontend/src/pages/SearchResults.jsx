@@ -29,7 +29,7 @@ const SearchPage = () => {
   const fetchLikedApplications = async (query) => {
     try {
       const response = await axios.get(
-        `${backend_url}applications?page=${page}&limit=9&search=${query}`
+        `${backend_url}/applications?page=${page}&limit=9&search=${query}`
       );
       setApplications(response.data["data"] || []);
       console.log(response.data["count"][0]["count"]);
@@ -50,7 +50,7 @@ const SearchPage = () => {
 
       // Then, send the request to the backend to update the like status.
       // Note: This assumes your backend toggles the `liked` status and doesn't need a specific liked/disliked value.
-      await axios.post(`${backend_url}api/toggle-like`, {
+      await axios.post(`${backend_url}/toggle-like`, {
         userId,
         applicationId,
         liked: !liked,

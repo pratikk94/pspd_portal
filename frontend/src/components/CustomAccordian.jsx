@@ -10,6 +10,7 @@ import LinkIcon from "@mui/icons-material/Link";
 import IconButton from "@mui/material/IconButton";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { backend_url } from "../urls";
 
 const InstagramPost = ({
   id,
@@ -28,14 +29,11 @@ const InstagramPost = ({
     try {
       // Replace 'your-user-id' with the actual user ID
       const userId = 1;
-      const response = await axios.post(
-        "http://localhost:3000/api/toggle-like",
-        {
-          userId: userId,
-          applicationId: id,
-          liked: newLikedState ? 1 : 0,
-        }
-      );
+      const response = await axios.post(`${backend_url}/toggle-like`, {
+        userId: userId,
+        applicationId: id,
+        liked: newLikedState ? 1 : 0,
+      });
       // Handle the response as needed
     } catch (error) {
       console.error("Error toggling like status:", error);
@@ -123,96 +121,14 @@ const InstagramPostRow = ({ posts }) => {
   );
 };
 
-// const InstagramFeedAccordion = () => {
-//   const [types, setTypes] = useState([]);
-//   const [data, setData] = useState({});
-
-//   useEffect(() => {
-//     const fetchTypes = axios.get("http://localhost:3000/types");
-//     const fetchData = axios.get("http://localhost:3000/data");
-
-//     axios.all([fetchTypes, fetchData]).then(
-//       axios.spread((...responses) => {
-//         const typesResponse = responses[0].data;
-//         const dataResponse = responses[1].data;
-
-//         setTypes(typesResponse);
-//         setData(dataResponse);
-//       })
-//     );
-//   }, []);
-
-//   return (
-//     <div>
-//       {types.map((type) => (
-//         <Accordion key={type.type_id}>
-//           <AccordionSummary
-//             expandIcon={<ExpandMoreIcon />}
-//             aria-controls={`panel-${type.type_id}-content`}
-//             id={`panel-${type.type_id}-header`}
-//           >
-//             <Typography>{type.type_name}</Typography>
-//           </AccordionSummary>
-//           <AccordionDetails>
-//             {data[type.type_name] ? (
-//               <InstagramPostRow posts={data[type.type_name]} />
-//             ) : (
-//               <Typography>No posts available.</Typography>
-//             )}
-//           </AccordionDetails>
-//         </Accordion>
-//       ))}
-//     </div>
-//   );
-// };
-
-// const InstagramFeed = () => {
-//   const [posts, setPosts] = useState([]);
-
-//   useEffect(() => {
-//     const fetchPosts = async () => {
-//       try {
-//         // Fetch data from the backend
-//         const response = await axios.get("http://localhost:3000/data");
-//         const postData = response.data;
-//         setPosts(postData);
-//       } catch (error) {
-//         console.error("Error fetching posts:", error);
-//       }
-//     };
-
-//     fetchPosts();
-//   }, []);
-
-//   return (
-//     <Grid container spacing={2}>
-//       {Object.keys(posts).map((type_name) => (
-//         <Grid item xs={12} sm={6} md={4} key={type_name}>
-//           {posts[type_name].map((post) => (
-//             <InstagramPost
-//               key={post.id}
-//               id={post.id}
-//               name={post.name}
-//               description={post.description}
-//               image={post.image}
-//               link={post.link}
-//               initialLiked={post.liked} // Pass the liked state to the InstagramPost component
-//             />
-//           ))}
-//         </Grid>
-//       ))}
-//     </Grid>
-//   );
-// };
-
 // export default InstagramFeed;
 const InstagramFeedAccordion = () => {
   const [types, setTypes] = useState([]);
   const [data, setData] = useState({});
 
   useEffect(() => {
-    const fetchTypes = () => axios.get("http://localhost:3000/types");
-    const fetchData = () => axios.get("http://localhost:3000/data");
+    const fetchTypes = () => axios.get(`${backend_url}/types`);
+    const fetchData = () => axios.get(`${backend_url}/data`);
 
     Promise.all([fetchTypes(), fetchData()])
       .then((responses) => {

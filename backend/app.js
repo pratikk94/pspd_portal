@@ -74,7 +74,7 @@ app.get("/applications", (req, res) => {
   const promises = [
     new Promise((resolve, reject) => {
       pool.query(
-        `SELECT apps.id,apps.name,apps.description,apps.image, apps.link, apps.type_id ,CASE      WHEN la.cardId IS NULL THEN 0  WHEN la.cardID IS NOT NULL and la.liked=0 then 0  ELSE 1    END AS liked  FROM applications apps  LEFT JOIN (   SELECT cardId,liked FROM user_likes )        la ON apps.id = la.cardId ${searchQuery} order by name asc LIMIT ? OFFSET ?`,
+        `SELECT apps.id,apps.name,apps.description,apps.image, apps.link,apps.type_id ,CASE      WHEN la.cardId IS NULL THEN 0  WHEN la.cardID IS NOT NULL and la.liked=0 then 0  ELSE 1    END AS liked  FROM applications apps  LEFT JOIN (   SELECT cardId,liked FROM user_likes )        la ON apps.id = la.cardId ${searchQuery} order by name asc LIMIT ? OFFSET ?`,
         queryParams,
         (err, results) => {
           if (err) {
